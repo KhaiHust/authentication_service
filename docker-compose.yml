@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  authen-db:
+    image: postgres:13
+    container_name: authen_db
+    environment:
+        POSTGRES_USER: user_authen_db
+        POSTGRES_PASSWORD: secret
+        POSTGRES_DB: authen_service_db
+    ports:
+        - "5433:5432"
+    volumes:
+        - postgres:/data/postgres
+    networks:
+        - authen-network
+
