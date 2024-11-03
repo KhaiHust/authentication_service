@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   authen-db:
-    image: postgres:13
+    image: postgres:latest
     container_name: authen_db
     environment:
         POSTGRES_USER: user_authen_db
@@ -14,3 +14,8 @@ services:
     networks:
         - authen-network
 
+networks:
+    authen-network:
+        driver: bridge
+volumes:
+    postgres:
