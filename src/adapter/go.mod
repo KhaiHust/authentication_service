@@ -6,11 +6,14 @@ replace github.com/KhaiHust/authen_service/core => ../core
 
 require (
 	github.com/KhaiHust/authen_service/core v0.0.0-00010101000000-000000000000
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golibs-starter/golib v1.0.1
 	gorm.io/gorm v1.25.12
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
