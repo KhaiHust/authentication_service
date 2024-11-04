@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"github.com/KhaiHust/authen_service/core/common"
 	"github.com/KhaiHust/authen_service/public/apihelper"
 	"github.com/KhaiHust/authen_service/public/resource/request"
@@ -17,9 +16,10 @@ type UserController struct {
 	userService service.IUserService
 }
 
-func NewUserController(userService service.IUserService) *UserController {
+func NewUserController(baseController *BaseController, userService service.IUserService) *UserController {
 	return &UserController{
-		userService: userService,
+		BaseController: *baseController,
+		userService:    userService,
 	}
 }
 
@@ -31,7 +31,7 @@ func (u *UserController) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	if err := u.Validator.Validate.Struct(&req); err != nil {
+	if err := u.Validator.Struct(req); err != nil {
 		log.Error(c, "Validate error: %v", err)
 		errCode, err := strconv.ParseInt(err.Error(), 10, 64)
 		if err != nil {
@@ -45,11 +45,12 @@ func (u *UserController) RegisterUser(c *gin.Context) {
 	result, err := u.userService.CreateUser(c, &req)
 	if err != nil {
 		log.Error(c, "CreateUser error: %v", err)
-		if errors.Is(err, errors.New(common.ErrExistedEmail)) {
+		if err.Error() == common.ErrExistedEmail {
 			apihelper.AbortErrorHandle(c, common.ExistedEmailErrCode)
 			return
 		}
 		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
 	}
 	apihelper.SuccessfulHandle(c, response.FromEntityToRegisterUserResponse(result))
 

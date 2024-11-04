@@ -33,8 +33,9 @@ func (customValidate *CustomValidate) Struct(current interface{}) error {
 			for i := 0; i < t.NumField(); i++ {
 				if string(t.Field(i).Name) == err.Field() {
 					errMsg := t.Field(i).Tag.Get(TagMessage)
+					errCode := t.Field(i).Tag.Get(TagErrorCode)
 					if len(errMsg) > 0 {
-						return errors.New(TagErrorCode)
+						return errors.New(errCode)
 					}
 				}
 			}
@@ -46,7 +47,7 @@ func (customValidate *CustomValidate) Struct(current interface{}) error {
 
 // TSCustomValidator custom validator
 func TSCustomValidator() *CustomValidate {
-	return &CustomValidate{
-		Validate: validator.New(),
-	}
+	customValidate := &CustomValidate{}
+	customValidate.init(validator.New())
+	return customValidate
 }

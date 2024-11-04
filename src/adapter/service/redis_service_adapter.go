@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/KhaiHust/authen_service/adapter/properties"
 	"github.com/KhaiHust/authen_service/core/port"
 	"github.com/go-redis/redis/v8"
 	"github.com/golibs-starter/golib/log"
@@ -12,7 +11,6 @@ import (
 )
 
 type RedisServiceAdapter struct {
-	props       *properties.RedisProperties
 	redisClient *redis.Client
 }
 
@@ -44,6 +42,6 @@ func (r RedisServiceAdapter) GetFromCache(ctx context.Context, key string) (inte
 	return val, nil
 }
 
-func NewRedisServiceAdapter(props *properties.RedisProperties, redisClient *redis.Client) port.ICachePort {
-	return &RedisServiceAdapter{props: props, redisClient: redisClient}
+func NewRedisServiceAdapter(redisClient *redis.Client) port.ICachePort {
+	return &RedisServiceAdapter{redisClient: redisClient}
 }

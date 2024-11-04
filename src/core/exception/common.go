@@ -6,5 +6,7 @@ import (
 )
 
 var (
+	GetArgumentException = exception.New(common.GeneralServiceUnavailable,
+		common.GetErrorResponse(common.GeneralServiceUnavailable).Message)
 	InternalServerErrorException = exception.New(common.GeneralServiceUnavailable, common.GetErrorResponse(common.GeneralServiceUnavailable).Message)
 )

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/KhaiHust/authen_service/core/common"
 	"github.com/KhaiHust/authen_service/core/entity"
-	"github.com/KhaiHust/authen_service/core/exception"
+	exception2 "github.com/KhaiHust/authen_service/core/exception"
 	"github.com/KhaiHust/authen_service/core/port"
 	"github.com/golibs-starter/golib/log"
 )
@@ -20,8 +20,8 @@ type CreateUserUsecase struct {
 
 func (c *CreateUserUsecase) CreateNewUser(ctx *context.Context, userEntity *entity.UserEntity) (*entity.UserEntity, error) {
 	existedUser, err := c.userPort.GetUserByEmail(ctx, userEntity.Email)
-	if err != nil {
-		log.Error(ctx, "GetUserByEmail error: %v", err)
+	if err != nil && err.Error() != common.ErrUserNotFound {
+		log.Error(ctx, "GetUserByEmail error: ", err)
 		return nil, err
 	}
 	if existedUser != nil {
@@ -34,11 +34,12 @@ func (c *CreateUserUsecase) CreateNewUser(ctx *context.Context, userEntity *enti
 		return nil, err
 	}
 	userEntity.Password = hashPassword
+	userEntity.IsActive = true
 	tx := c.dbTxUsecase.StartTransaction()
 	defer func() {
 		if r := recover(); r != nil {
 			log.Error(ctx, "Panic error: %v", r)
-			err = exception.InternalServerErrorException
+			err = exception2.InternalServerErrorException
 		}
 		if errRollback := c.dbTxUsecase.Rollback(tx); errRollback != nil {
 			log.Error(ctx, "Rollback save user error: %v", errRollback)

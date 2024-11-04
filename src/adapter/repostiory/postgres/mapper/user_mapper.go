@@ -30,8 +30,8 @@ func ModelToUserEntity(userModel *model.UserModel) *entity.UserEntity {
 	return &entity.UserEntity{
 		BaseEntity: entity.BaseEntity{
 			ID:        userModel.ID,
-			CreatedAt: userModel.CreatedAt,
-			UpdatedAt: userModel.UpdatedAt,
+			CreatedAt: userModel.CreatedAt.Unix(),
+			UpdatedAt: userModel.UpdatedAt.Unix(),
 		},
 		Name:       userModel.Name,
 		Email:      userModel.Email,

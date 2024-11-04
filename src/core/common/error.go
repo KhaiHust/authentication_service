@@ -1,6 +1,6 @@
 package common
 
-const (
+var (
 	ErrUserNotFound = "user not found"
 	ErrUnexpected   = "unexpected error"
 	ErrExistedEmail = "email already existed"

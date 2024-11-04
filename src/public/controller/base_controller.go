@@ -6,6 +6,8 @@ type BaseController struct {
 	Validator *apihelper.CustomValidate
 }
 
-func NewBaseController() *BaseController {
-	return &BaseController{}
+func NewBaseController(validator *apihelper.CustomValidate) *BaseController {
+	return &BaseController{
+		Validator: validator,
+	}
 }

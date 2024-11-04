@@ -10,12 +10,10 @@ services:
     ports:
         - "5433:5432"
     volumes:
-        - postgres:/data/postgres
-    networks:
-        - authen-network
+        - ./docker/postgres/init-database-test.sql:/docker-entrypoint-initdb.d/init-database-test.sql
 
-networks:
-    authen-network:
-        driver: bridge
-volumes:
-    postgres:
+  authen-redis:
+    container_name: authen_redis
+    image: redis:5.0.6
+    ports:
+      - "6379:6379"
