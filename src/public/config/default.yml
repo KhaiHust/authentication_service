@@ -1,0 +1,9 @@
+app:
+  name: Authentication Internal Service
+  path: /authen-service
+  security:
+    http:
+      publicUrls:
+        - /actuator/health
+        - /actuator/info
+        - /public/v1/user
