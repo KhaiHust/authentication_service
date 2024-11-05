@@ -14,6 +14,7 @@ const (
 	InvalidPasswordErrCode = 400027
 	InvalidNameErrCode     = 400028
 	ExistedEmailErrCode    = 400032
+	UserNotExistErrCode    = 400036
 )
 
 const (
@@ -21,6 +22,7 @@ const (
 	InvalidPasswordMessage = "Vui lòng cung cấp mật khẩu dài hơn 6 ký tự và ít hơn 20 ký tự!"
 	InvalidNameMessage     = "Vui lòng cung cấp tên dài hơn 3 ký tự và ít hơn 30 ký tự!"
 	ExistedEmailMessage    = "Một tài khoản đã tồn tại với email này!"
+	UserNotExistMessage    = "Không tìm thấy tài khoản với địa chỉ email này."
 )
 
 const ()
@@ -62,6 +64,11 @@ var errorResponseMap = map[int]ErrorResponse{
 		HTTPCode:    http.StatusBadRequest,
 		ServiceCode: ExistedEmailErrCode,
 		Message:     ExistedEmailMessage,
+	},
+	UserNotExistErrCode: {
+		HTTPCode:    http.StatusBadRequest,
+		ServiceCode: UserNotExistErrCode,
+		Message:     UserNotExistMessage,
 	},
 }
 

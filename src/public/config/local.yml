@@ -14,3 +14,8 @@ app:
   security:
     http:
       jwt.publicKey: ${JWT_PUBLIC_KEY}
+  services:
+    notification-service:
+      BaseUrl: https://api.courier.com
+      Token: ${NOTIFICATION_SERVICE_TOKEN}
+      TemplateOTPForRegistration: QJS1DXW1X2MTZHJGM0E4GGZP8VS8

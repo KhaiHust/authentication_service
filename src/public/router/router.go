@@ -14,6 +14,7 @@ type RegisterRoutersIn struct {
 	Engine         *gin.Engine
 	Actuator       *actuator.Endpoint
 	UserController *controller.UserController
+	OtpController  *controller.OtpController
 }
 
 func RegisterGinRouters(p RegisterRoutersIn) {
@@ -25,6 +26,7 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 	userV1 := router.Group("/public/v1/user")
 	{
 		userV1.POST("", p.UserController.RegisterUser)
+		userV1.POST("/send-verification-code", p.OtpController.SendOtpForRegistration)
 	}
 
 }

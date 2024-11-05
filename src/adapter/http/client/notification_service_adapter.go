@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	SEND_NOTIFICATION_ENDPOINT = "notification/send"
+	SEND_NOTIFICATION_ENDPOINT = "/send"
 )
 
 type NotificationServiceAdapter struct {
@@ -21,14 +21,15 @@ type NotificationServiceAdapter struct {
 	httpClient client.ContextualHttpClient
 }
 
-func (n *NotificationServiceAdapter) SendOTPForRegistration(ctx context.Context, request *dto.OTPSignupNotificationDto) error {
+func (n *NotificationServiceAdapter) SendOTPForRegistration(ctx *context.Context, request *dto.OTPSignupNotificationDto) error {
 	sendOtpRequest := request2.ToSendOTPForRegistrationRequest(request, n.props.TemplateOTPForRegistration)
 	if sendOtpRequest == nil {
 		log.Error(ctx, "SendOTPForRegistrationRequest is nil")
 		return errors.New("SendOTPForRegistrationRequest is nil")
 	}
-	var notiResponse *response.NotificationDtoResponse
-	resp, err := n.httpClient.Post(ctx, n.props.BaseUrl+SEND_NOTIFICATION_ENDPOINT, sendOtpRequest, notiResponse)
+	notiResponse := &response.NotificationDtoResponse{}
+	resp, err := n.httpClient.Post(*ctx, n.props.BaseUrl+SEND_NOTIFICATION_ENDPOINT, sendOtpRequest, notiResponse,
+		client.WithHeader("Authorization", "Bearer "+n.props.Token))
 	if err != nil {
 		log.Error(ctx, "SendOTPForRegistrationRequest error: %v", err)
 		return err
@@ -44,6 +45,8 @@ func (n *NotificationServiceAdapter) SendOTPForRegistration(ctx context.Context,
 	return nil
 }
 
-func NewNotificationServiceAdapter(props *properties.NotificationServiceProperties) port.INotificationPort {
-	return &NotificationServiceAdapter{props: props}
+func NewNotificationServiceAdapter(props *properties.NotificationServiceProperties,
+	httpClient client.ContextualHttpClient) port.INotificationPort {
+	return &NotificationServiceAdapter{props: props,
+		httpClient: httpClient}
 }

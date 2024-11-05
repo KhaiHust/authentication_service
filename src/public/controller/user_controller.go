@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/KhaiHust/authen_service/core/common"
+	"github.com/KhaiHust/authen_service/core/constant"
 	"github.com/KhaiHust/authen_service/public/apihelper"
 	"github.com/KhaiHust/authen_service/public/resource/request"
 	"github.com/KhaiHust/authen_service/public/resource/response"
@@ -45,7 +46,7 @@ func (u *UserController) RegisterUser(c *gin.Context) {
 	result, err := u.userService.CreateUser(c, &req)
 	if err != nil {
 		log.Error(c, "CreateUser error: %v", err)
-		if err.Error() == common.ErrExistedEmail {
+		if err.Error() == constant.ErrExistedEmail {
 			apihelper.AbortErrorHandle(c, common.ExistedEmailErrCode)
 			return
 		}

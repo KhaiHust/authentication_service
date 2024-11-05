@@ -7,3 +7,4 @@ app:
         - /actuator/health
         - /actuator/info
         - /public/v1/user
+        - /public/v1/user/send-verification-code

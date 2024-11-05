@@ -1,7 +1,10 @@
 package bootstrap
 
 import (
+	"github.com/KhaiHust/authen_service/adapter/http/client"
+	"github.com/KhaiHust/authen_service/adapter/properties"
 	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres"
+	service2 "github.com/KhaiHust/authen_service/adapter/service"
 	"github.com/KhaiHust/authen_service/core/usecase"
 	"github.com/KhaiHust/authen_service/public/apihelper"
 	"github.com/KhaiHust/authen_service/public/controller"
@@ -37,24 +40,32 @@ func All() fx.Option {
 		golib.HttpClientOpt(),
 		golibsec.SecuredHttpClientOpt(),
 
+		//Provide config
+		golib.ProvideProps(properties.NewNotificationServiceProperties),
+
 		//Provide port implementation
 		fx.Provide(postgres.NewDatabaseTransactionAdapter),
 		fx.Provide(postgres.NewUserRepositoryAdapter),
+		fx.Provide(client.NewNotificationServiceAdapter),
+		fx.Provide(service2.NewRedisServiceAdapter),
 
 		//Provide usecase
 		fx.Provide(usecase.NewDatabaseTransactionUsecase),
 		fx.Provide(usecase.NewCreateUserUsecase),
 		fx.Provide(usecase.NewGetUserUsecase),
+		fx.Provide(usecase.NewSendOtpUseCase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),
 
 		//Provide services
 		fx.Provide(service.NewUserService),
+		fx.Provide(service.NewOtpService),
 
 		//Provide controller
 		fx.Provide(controller.NewBaseController),
 		fx.Provide(controller.NewUserController),
+		fx.Provide(controller.NewOtpController),
 
 		// Provide gin http server auto config,
 		// actuator endpoints and application routers

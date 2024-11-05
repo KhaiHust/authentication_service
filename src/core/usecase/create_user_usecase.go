@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/KhaiHust/authen_service/core/common"
+	"github.com/KhaiHust/authen_service/core/constant"
 	"github.com/KhaiHust/authen_service/core/entity"
 	exception2 "github.com/KhaiHust/authen_service/core/exception"
 	"github.com/KhaiHust/authen_service/core/port"
@@ -20,13 +21,13 @@ type CreateUserUsecase struct {
 
 func (c *CreateUserUsecase) CreateNewUser(ctx *context.Context, userEntity *entity.UserEntity) (*entity.UserEntity, error) {
 	existedUser, err := c.userPort.GetUserByEmail(ctx, userEntity.Email)
-	if err != nil && err.Error() != common.ErrUserNotFound {
+	if err != nil && err.Error() != constant.ErrUserNotFound {
 		log.Error(ctx, "GetUserByEmail error: ", err)
 		return nil, err
 	}
 	if existedUser != nil {
 		log.Info(ctx, "User with email %s already existed", userEntity.Email)
-		return nil, errors.New(common.ErrExistedEmail)
+		return nil, errors.New(constant.ErrExistedEmail)
 	}
 	hashPassword, err := common.HashPassword(userEntity.Password)
 	if err != nil {

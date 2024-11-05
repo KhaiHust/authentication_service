@@ -6,5 +6,5 @@ import (
 )
 
 type INotificationPort interface {
-	SendOTPForRegistration(ctx context.Context, request *dto.OTPSignupNotificationDto) error
+	SendOTPForRegistration(ctx *context.Context, request *dto.OTPSignupNotificationDto) error
 }

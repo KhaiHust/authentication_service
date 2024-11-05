@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/KhaiHust/authen_service/core/constant"
 	"github.com/KhaiHust/authen_service/core/port"
-	"github.com/go-redis/redis/v8"
 	"github.com/golibs-starter/golib/log"
+	"github.com/redis/go-redis/v9"
 	"time"
 )
 
@@ -34,7 +35,7 @@ func (r RedisServiceAdapter) GetFromCache(ctx context.Context, key string) (inte
 	switch {
 	case errors.Is(err, redis.Nil):
 		log.Info(ctx, "key does not exist")
-		return nil, nil
+		return nil, errors.New(constant.ErrCacheKeyNil)
 	case err != nil:
 		log.Error(ctx, "Get failed", err)
 		return nil, err

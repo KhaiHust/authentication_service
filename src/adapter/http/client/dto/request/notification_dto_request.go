@@ -8,16 +8,16 @@ type SendNotificationRequest struct {
 	Message SendNotificationMessage `json:"message"`
 }
 type SendNotificationMessage struct {
-	To       interface{} `json:"to"`
-	Template string      `json:"template"`
-	Data     interface{} `json:"data"`
+	To       SendOTPSignUpTo `json:"to"`
+	Template string          `json:"template"`
+	Data     interface{}     `json:"data"`
 }
 type SendOTPSignUpTo struct {
 	Email string `json:"email"`
 }
 type SendOTPForRegistrationRequest struct {
 	RecipientName string `json:"recipientName"`
-	OTPSignUp     string `json:"otpSignUp"`
+	OTPSignUp     string `json:"OTPSignUp"`
 }
 
 func ToSendOTPForRegistrationRequest(request *dto.OTPSignupNotificationDto, template string) *SendNotificationRequest {

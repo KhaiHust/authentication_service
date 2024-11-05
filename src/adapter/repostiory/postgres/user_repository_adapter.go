@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres/mapper"
 	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres/model"
-	"github.com/KhaiHust/authen_service/core/common"
+	"github.com/KhaiHust/authen_service/core/constant"
 	"github.com/KhaiHust/authen_service/core/entity"
 	"github.com/KhaiHust/authen_service/core/port"
 	"github.com/golibs-starter/golib/log"
@@ -31,7 +31,7 @@ func (u *UserRepositoryAdapter) GetUserByEmail(ctx *context.Context, email strin
 	if err := u.db.WithContext(*ctx).Where("email = ?", email).First(user).Error; err != nil {
 		log.Error(ctx, "Error when get user by email ", err)
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New(common.ErrUserNotFound)
+			return nil, errors.New(constant.ErrUserNotFound)
 		}
 		return nil, err
 	}
