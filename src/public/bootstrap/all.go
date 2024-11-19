@@ -5,6 +5,7 @@ import (
 	"github.com/KhaiHust/authen_service/adapter/properties"
 	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres"
 	service2 "github.com/KhaiHust/authen_service/adapter/service"
+	properties2 "github.com/KhaiHust/authen_service/core/properties"
 	"github.com/KhaiHust/authen_service/core/usecase"
 	"github.com/KhaiHust/authen_service/public/apihelper"
 	"github.com/KhaiHust/authen_service/public/controller"
@@ -42,12 +43,14 @@ func All() fx.Option {
 
 		//Provide config
 		golib.ProvideProps(properties.NewNotificationServiceProperties),
+		golib.ProvideProps(properties2.NewTokenProperties),
 
 		//Provide port implementation
 		fx.Provide(postgres.NewDatabaseTransactionAdapter),
 		fx.Provide(postgres.NewUserRepositoryAdapter),
 		fx.Provide(client.NewNotificationServiceAdapter),
 		fx.Provide(service2.NewRedisServiceAdapter),
+		fx.Provide(postgres.NewRefreshTokenRepositoryAdapter),
 
 		//Provide usecase
 		fx.Provide(usecase.NewDatabaseTransactionUsecase),
@@ -56,6 +59,7 @@ func All() fx.Option {
 		fx.Provide(usecase.NewSendOtpUseCase),
 		fx.Provide(usecase.NewVerifyOtpUseCase),
 		fx.Provide(usecase.NewUpdateUserUseCase),
+		fx.Provide(usecase.NewLoginUserUseCase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),

@@ -19,6 +19,7 @@ type RegisterRoutersIn struct {
 
 func RegisterGinRouters(p RegisterRoutersIn) {
 	group := p.Engine.Group(p.App.Path())
+
 	group.GET("/actuator/health", gin.WrapF(p.Actuator.Health))
 	group.GET("/actuator/info", gin.WrapF(p.Actuator.Info))
 
@@ -28,6 +29,7 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		userV1.POST("", p.UserController.RegisterUser)
 		userV1.POST("/send-verification-code", p.OtpController.SendOtpForRegistration)
 		userV1.POST("/verify-email", p.OtpController.VerifyOtpForRegistration)
+		userV1.POST("/login", p.UserController.LoginUser)
 	}
 
 }

@@ -19,6 +19,8 @@ const (
 	OtpNotProvidedErrCode = 400053
 	OtpInvalidErrCode     = 400054
 	OTPExpiredErrCode     = 400055
+
+	WrongPasswordErrCode = 400056
 )
 
 const (
@@ -30,6 +32,7 @@ const (
 	OtpNotProvidedMessage  = "Vui lòng cung cấp mã OTP!"
 	OtpInvalidMessage      = "Mã OTP không hợp lệ!"
 	OTPExpiredMessage      = "Mã OTP đã hết hạn!"
+	WrongPasswordMessage   = "Email / Mật khẩu không đúng!"
 )
 
 const ()
@@ -91,6 +94,11 @@ var errorResponseMap = map[int]ErrorResponse{
 		HTTPCode:    http.StatusBadRequest,
 		ServiceCode: OTPExpiredErrCode,
 		Message:     OTPExpiredMessage,
+	},
+	WrongPasswordErrCode: {
+		HTTPCode:    http.StatusBadRequest,
+		ServiceCode: WrongPasswordErrCode,
+		Message:     WrongPasswordMessage,
 	},
 }
 
