@@ -27,6 +27,7 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 	{
 		userV1.POST("", p.UserController.RegisterUser)
 		userV1.POST("/send-verification-code", p.OtpController.SendOtpForRegistration)
+		userV1.POST("/verify-email", p.OtpController.VerifyOtpForRegistration)
 	}
 
 }

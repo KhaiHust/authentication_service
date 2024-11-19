@@ -15,6 +15,16 @@ type RedisServiceAdapter struct {
 	redisClient *redis.Client
 }
 
+func (r RedisServiceAdapter) DeleteFromCache(ctx context.Context, key string) error {
+	result, err := r.redisClient.Del(ctx, key).Result()
+	if err != nil {
+		log.Error(ctx, "delete key %s, err %v", key)
+		return err
+	}
+	log.Info(ctx, "delete key %s, result %v", key, result)
+	return nil
+}
+
 func (r RedisServiceAdapter) SetToCache(ctx context.Context, key string, value interface{}, ttl int) error {
 	data, err := json.Marshal(value)
 	if err != nil {

@@ -7,9 +7,15 @@ import (
 
 type IOtpService interface {
 	SendOtpForRegistration(ctx context.Context, email string) error
+	VerifiedOtpForRegistration(ctx context.Context, email string, otp string) error
 }
 type OtpService struct {
-	sendOtpUsecase usecase.ISendOtpUseCase
+	sendOtpUsecase   usecase.ISendOtpUseCase
+	verifyOtpUsecase usecase.IVerifyOtpUseCase
+}
+
+func (o *OtpService) VerifiedOtpForRegistration(ctx context.Context, email string, otp string) error {
+	return o.verifyOtpUsecase.VerifyOtpRegister(&ctx, email, otp)
 }
 
 func (o *OtpService) SendOtpForRegistration(ctx context.Context, email string) error {

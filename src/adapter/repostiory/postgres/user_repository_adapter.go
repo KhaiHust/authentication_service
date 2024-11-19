@@ -16,6 +16,15 @@ type UserRepositoryAdapter struct {
 	base
 }
 
+func (u *UserRepositoryAdapter) UpdateUser(ctx *context.Context, userEntity *entity.UserEntity, tx *gorm.DB) (*entity.UserEntity, error) {
+	userModel := mapper.EntityToUserModel(userEntity)
+	if err := tx.WithContext(*ctx).Save(userModel).Error; err != nil {
+		log.Error(ctx, "Error when update user ", err)
+		return nil, err
+	}
+	return mapper.ModelToUserEntity(userModel), nil
+}
+
 func (u *UserRepositoryAdapter) SaveUser(ctx *context.Context, userEntity *entity.UserEntity, tx *gorm.DB) (*entity.UserEntity, error) {
 	userModel := mapper.EntityToUserModel(userEntity)
 	if err := tx.WithContext(*ctx).Create(userModel).Error; err != nil {

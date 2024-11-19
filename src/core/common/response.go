@@ -15,6 +15,10 @@ const (
 	InvalidNameErrCode     = 400028
 	ExistedEmailErrCode    = 400032
 	UserNotExistErrCode    = 400036
+
+	OtpNotProvidedErrCode = 400053
+	OtpInvalidErrCode     = 400054
+	OTPExpiredErrCode     = 400055
 )
 
 const (
@@ -23,6 +27,9 @@ const (
 	InvalidNameMessage     = "Vui lòng cung cấp tên dài hơn 3 ký tự và ít hơn 30 ký tự!"
 	ExistedEmailMessage    = "Một tài khoản đã tồn tại với email này!"
 	UserNotExistMessage    = "Không tìm thấy tài khoản với địa chỉ email này."
+	OtpNotProvidedMessage  = "Vui lòng cung cấp mã OTP!"
+	OtpInvalidMessage      = "Mã OTP không hợp lệ!"
+	OTPExpiredMessage      = "Mã OTP đã hết hạn!"
 )
 
 const ()
@@ -69,6 +76,21 @@ var errorResponseMap = map[int]ErrorResponse{
 		HTTPCode:    http.StatusBadRequest,
 		ServiceCode: UserNotExistErrCode,
 		Message:     UserNotExistMessage,
+	},
+	OtpNotProvidedErrCode: {
+		HTTPCode:    http.StatusBadRequest,
+		ServiceCode: OtpNotProvidedErrCode,
+		Message:     OtpNotProvidedMessage,
+	},
+	OtpInvalidErrCode: {
+		HTTPCode:    http.StatusBadRequest,
+		ServiceCode: OtpInvalidErrCode,
+		Message:     OtpInvalidMessage,
+	},
+	OTPExpiredErrCode: {
+		HTTPCode:    http.StatusBadRequest,
+		ServiceCode: OTPExpiredErrCode,
+		Message:     OTPExpiredMessage,
 	},
 }
 

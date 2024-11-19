@@ -48,3 +48,40 @@ func (o *OtpController) SendOtpForRegistration(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, nil)
 }
+func (o *OtpController) VerifyOtpForRegistration(c *gin.Context) {
+	var req request.OtpVerifyRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(c, "Error while binding request", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	if err := o.Validator.Struct(req); err != nil {
+		log.Error(c, "Error while validating request", err)
+		errCode, err := strconv.ParseInt(err.Error(), 10, 64)
+		if err == nil {
+			apihelper.AbortErrorHandle(c, int(errCode))
+			return
+		}
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	err := o.otpService.VerifiedOtpForRegistration(c, req.Email, req.OTP)
+	if err != nil {
+		log.Error(c, "Error while verifying otp", err)
+		switch err.Error() {
+		case constant.ErrUserNotFound:
+			apihelper.AbortErrorHandle(c, common.UserNotExistErrCode)
+			return
+		case constant.ErrOtpNotFound:
+			apihelper.AbortErrorHandle(c, common.OTPExpiredErrCode)
+			return
+		case constant.ErrOtpInvalid:
+			apihelper.AbortErrorHandle(c, common.OtpInvalidErrCode)
+			return
+		default:
+			apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+			return
+		}
+	}
+	apihelper.SuccessfulHandle(c, nil)
+}

@@ -54,6 +54,8 @@ func All() fx.Option {
 		fx.Provide(usecase.NewCreateUserUsecase),
 		fx.Provide(usecase.NewGetUserUsecase),
 		fx.Provide(usecase.NewSendOtpUseCase),
+		fx.Provide(usecase.NewVerifyOtpUseCase),
+		fx.Provide(usecase.NewUpdateUserUseCase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),
