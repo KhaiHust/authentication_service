@@ -9,6 +9,9 @@ const (
 	// GeneralBadRequest General
 	GeneralBadRequest = 400
 
+	//GeneralUnauthorized error
+	GeneralUnauthorized = 401
+
 	//ErrBadRequest error
 	InvalidEmailErrCode    = 400026
 	InvalidPasswordErrCode = 400027
@@ -54,6 +57,11 @@ var errorResponseMap = map[int]ErrorResponse{
 		HTTPCode:    http.StatusBadRequest,
 		ServiceCode: GeneralBadRequest,
 		Message:     "Bad request",
+	},
+	GeneralUnauthorized: {
+		HTTPCode:    http.StatusUnauthorized,
+		ServiceCode: GeneralUnauthorized,
+		Message:     "Unauthorized",
 	},
 	InvalidEmailErrCode: {
 		HTTPCode:    http.StatusBadRequest,

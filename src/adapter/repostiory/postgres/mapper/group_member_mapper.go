@@ -12,6 +12,7 @@ func ToGroupMemberModel(groupMember *entity.GroupMemberEntity) *model.GroupMembe
 		},
 		GroupID: groupMember.GroupID,
 		UserID:  groupMember.UserID,
+		RoleID:  groupMember.RoleID,
 	}
 }
 func ToGroupMemberEntity(groupMemberModel *model.GroupMemberModel) *entity.GroupMemberEntity {
@@ -23,5 +24,6 @@ func ToGroupMemberEntity(groupMemberModel *model.GroupMemberModel) *entity.Group
 		},
 		GroupID: groupMemberModel.GroupID,
 		UserID:  groupMemberModel.UserID,
+		RoleID:  groupMemberModel.RoleID,
 	}
 }

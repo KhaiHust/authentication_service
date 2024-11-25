@@ -69,8 +69,14 @@ func (c *CreateGroupUsecase) CreateGroup(ctx context.Context, userID int64, req 
 
 }
 
-func NewCreateGroupUsecase(groupPort port.IGroupPort) ICreateGroupUsecase {
+func NewCreateGroupUsecase(groupPort port.IGroupPort,
+	getGroupRoleUsecase IGetGroupRoleUsecase,
+	databaseTransactionUsecase IDatabaseTransactionUsecase,
+	groupMemberPort port.IGroupMemberPort) ICreateGroupUsecase {
 	return &CreateGroupUsecase{
-		groupPort: groupPort,
+		groupPort:                  groupPort,
+		getGroupRoleUsecase:        getGroupRoleUsecase,
+		databaseTransactionUsecase: databaseTransactionUsecase,
+		groupMemberPort:            groupMemberPort,
 	}
 }

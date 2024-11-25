@@ -14,7 +14,6 @@ import (
 	"github.com/golibs-starter/golib"
 	golibdata "github.com/golibs-starter/golib-data"
 	golibgin "github.com/golibs-starter/golib-gin"
-
 	golibsec "github.com/golibs-starter/golib-security"
 	"go.uber.org/fx"
 )
@@ -51,6 +50,9 @@ func All() fx.Option {
 		fx.Provide(client.NewNotificationServiceAdapter),
 		fx.Provide(service2.NewRedisServiceAdapter),
 		fx.Provide(postgres.NewRefreshTokenRepositoryAdapter),
+		fx.Provide(postgres.NewGroupRepositoryAdapter),
+		fx.Provide(postgres.NewGroupRoleRepositoryAdapter),
+		fx.Provide(postgres.NewGroupMemberRepositoryAdapter),
 
 		//Provide usecase
 		fx.Provide(usecase.NewDatabaseTransactionUsecase),
@@ -60,6 +62,8 @@ func All() fx.Option {
 		fx.Provide(usecase.NewVerifyOtpUseCase),
 		fx.Provide(usecase.NewUpdateUserUseCase),
 		fx.Provide(usecase.NewLoginUserUseCase),
+		fx.Provide(usecase.NewGetGroupRoleUsecase),
+		fx.Provide(usecase.NewCreateGroupUsecase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),
@@ -67,11 +71,13 @@ func All() fx.Option {
 		//Provide services
 		fx.Provide(service.NewUserService),
 		fx.Provide(service.NewOtpService),
+		fx.Provide(service.NewGroupService),
 
 		//Provide controller
 		fx.Provide(controller.NewBaseController),
 		fx.Provide(controller.NewUserController),
 		fx.Provide(controller.NewOtpController),
+		fx.Provide(controller.NewGroupController),
 
 		// Provide gin http server auto config,
 		// actuator endpoints and application routers
