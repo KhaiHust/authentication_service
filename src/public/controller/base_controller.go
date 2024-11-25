@@ -1,6 +1,8 @@
 package controller
 
-import "github.com/KhaiHust/authen_service/public/apihelper"
+import (
+	"github.com/KhaiHust/authen_service/public/apihelper"
+)
 
 type BaseController struct {
 	Validator *apihelper.CustomValidate

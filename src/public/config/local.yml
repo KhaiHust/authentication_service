@@ -19,3 +19,9 @@ app:
       BaseUrl: https://api.courier.com
       Token: ${NOTIFICATION_SERVICE_TOKEN}
       TemplateOTPForRegistration: QJS1DXW1X2MTZHJGM0E4GGZP8VS8
+    security:
+      http:
+        jwt:
+          PrivateKey: ${JWT_PRIVATE_KEY}
+          TokenExpired: 3600
+          RefreshTokenExpired: 86400
