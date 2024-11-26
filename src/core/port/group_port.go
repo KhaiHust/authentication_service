@@ -8,4 +8,5 @@ import (
 
 type IGroupPort interface {
 	CreateGroup(ctx context.Context, tx *gorm.DB, group *entity.GroupEntity) (*entity.GroupEntity, error)
+	GetGroupById(ctx context.Context, groupID int64) (*entity.GroupEntity, error)
 }
