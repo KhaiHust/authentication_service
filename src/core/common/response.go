@@ -12,6 +12,9 @@ const (
 	//GeneralUnauthorized error
 	GeneralUnauthorized = 401
 
+	//GeneralForbidden error
+	GeneralForbidden = 403
+
 	//ErrBadRequest error
 	InvalidEmailErrCode    = 400026
 	InvalidPasswordErrCode = 400027

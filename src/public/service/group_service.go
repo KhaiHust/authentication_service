@@ -9,15 +9,24 @@ import (
 
 type IGroupService interface {
 	CreateGroup(ctx context.Context, userID int64, dto *request2.CreateGroupDTO) (*entity.GroupEntity, error)
+	AddNewMember(ctx context.Context, userID, groupID int64, email string) (*entity.GroupMemberEntity, error)
 }
 type GroupService struct {
-	createGroupUsecase usecase.ICreateGroupUsecase
+	createGroupUsecase    usecase.ICreateGroupUsecase
+	addMemberGroupUsecase usecase.IAddMemberGroupUsecase
+}
+
+func (g GroupService) AddNewMember(ctx context.Context, userID, groupID int64, email string) (*entity.GroupMemberEntity, error) {
+	return g.addMemberGroupUsecase.AddNewMemberByEmail(ctx, userID, groupID, email)
 }
 
 func (g GroupService) CreateGroup(ctx context.Context, userID int64, dto *request2.CreateGroupDTO) (*entity.GroupEntity, error) {
 	return g.createGroupUsecase.CreateGroup(ctx, userID, dto)
 }
 
-func NewGroupService(createGroupUsecase usecase.ICreateGroupUsecase) IGroupService {
-	return &GroupService{createGroupUsecase: createGroupUsecase}
+func NewGroupService(createGroupUsecase usecase.ICreateGroupUsecase,
+	addMemberGroupUsecase usecase.IAddMemberGroupUsecase) IGroupService {
+	return &GroupService{createGroupUsecase: createGroupUsecase,
+		addMemberGroupUsecase: addMemberGroupUsecase,
+	}
 }

@@ -11,4 +11,9 @@ const (
 	ErrInvalidPassword = "invalid password"
 
 	ErrWrongPassword = "wrong password"
+	ErrGroupNotFound = "group not found"
+
+	ErrGroupMemberNotFound = "group member not found"
+
+	ErrForbiddenAddMember = "forbidden add member"
 )

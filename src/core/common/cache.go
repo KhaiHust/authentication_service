@@ -6,6 +6,7 @@ var (
 	CachePrefixUserInfoEmail = "user::email::%s"
 	CachePrefixOTPRegister   = "otp::register::%s"
 	CachePrefixGroupRoleCode = "group_role::code::%s"
+	CachePrefixGroup         = "group::%d"
 )
 
 func BuildCacheKeyGetUserInfoByEmail(email string) string {
@@ -17,4 +18,7 @@ func BuildCacheKeyOTPRegister(email string) string {
 }
 func BuildCacheKeyGroupRoleCode(code string) string {
 	return fmt.Sprintf(CachePrefixGroupRoleCode, code)
+}
+func BuildCacheKeyGroup(groupID int64) string {
+	return fmt.Sprintf(CachePrefixGroup, groupID)
 }

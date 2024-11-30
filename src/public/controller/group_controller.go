@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/golibs-starter/golib/log"
+	"strconv"
 )
 
 type GroupController struct {
@@ -63,4 +64,41 @@ func (g GroupController) GetUserID(c *gin.Context) (int64, error) {
 	}
 
 	return int64(userID.(float64)), nil
+}
+
+func (g GroupController) AddMember(c *gin.Context) {
+	var req request.AddMemberGroupReq
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(c, "error when binding request", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	if err := g.Validator.Struct(req); err != nil {
+		log.Error(c, "error when validating request", err)
+		errCode, err := strconv.ParseInt(err.Error(), 10, 64)
+		if err != nil {
+			log.Error(c, "error when parsing error code", err)
+			apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+			return
+		}
+		apihelper.AbortErrorHandle(c, int(errCode))
+		return
+	}
+	userID, err := g.GetUserID(c)
+	if err != nil {
+		log.Error(c, "error when getting user id", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	groupMember, err := g.groupService.AddNewMember(c, userID, req.GroupID, req.Email)
+	if err != nil {
+		log.Error(c, "error when adding member", err)
+		if err.Error() == constant.ErrForbiddenAddMember {
+			apihelper.AbortErrorHandle(c, common.GeneralForbidden)
+			return
+		}
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.ToAddNewMemberResp(groupMember))
 }
