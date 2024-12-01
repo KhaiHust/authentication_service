@@ -15,6 +15,14 @@ type GroupMemberRepositoryAdapter struct {
 	base
 }
 
+func (g GroupMemberRepositoryAdapter) GetListMemberByGroupID(ctx context.Context, groupID int64) ([]*entity.GroupMemberEntity, error) {
+	groupMemberModels := make([]*model.GroupMemberModel, 0)
+	if err := g.db.WithContext(ctx).Model(&model.GroupMemberModel{}).Where("group_id = ?", groupID).Find(&groupMemberModels).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToListGroupMemberEntity(groupMemberModels), nil
+}
+
 func (g GroupMemberRepositoryAdapter) GetGroupMemberByGroupIDAndUserID(ctx context.Context, groupID int64, userID int64) (*entity.GroupMemberEntity, error) {
 	groupMemberModel := &model.GroupMemberModel{}
 	if err := g.db.WithContext(ctx).Model(&model.GroupMemberModel{}).Where("group_id = ? AND user_id = ?", groupID, userID).First(groupMemberModel).Error; err != nil {

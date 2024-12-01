@@ -16,4 +16,7 @@ const (
 	ErrGroupMemberNotFound = "group member not found"
 
 	ErrForbiddenAddMember = "forbidden add member"
+
+	ErrForbiddenRemoveMember = "forbidden remove member"
+	ErrForbiddenGetMember    = "forbidden get member"
 )

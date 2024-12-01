@@ -13,6 +13,14 @@ type GroupRoleRepositoryAdapter struct {
 	base
 }
 
+func (g *GroupRoleRepositoryAdapter) GetRoleByIDs(ctx context.Context, ids []int64) ([]*entity.GroupRoleEntity, error) {
+	var roleModels []*model.GroupRoleModel
+	if err := g.db.WithContext(ctx).Where("id IN ?", ids).Find(&roleModels).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToListGroupRoleEntity(roleModels), nil
+}
+
 func (g *GroupRoleRepositoryAdapter) GetRoleByCode(ctx context.Context, code string) (*entity.GroupRoleEntity, error) {
 	var roleModel model.GroupRoleModel
 	if err := g.db.WithContext(ctx).Where("code = ?", code).First(&roleModel).Error; err != nil {

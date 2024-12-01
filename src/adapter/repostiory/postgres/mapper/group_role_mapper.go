@@ -15,3 +15,10 @@ func ToGroupRoleEntity(groupRoleModel *model.GroupRoleModel) *entity.GroupRoleEn
 		Name: groupRoleModel.Name,
 	}
 }
+func ToListGroupRoleEntity(groupRoleModels []*model.GroupRoleModel) []*entity.GroupRoleEntity {
+	groupRoleEntities := make([]*entity.GroupRoleEntity, 0)
+	for _, groupRoleModel := range groupRoleModels {
+		groupRoleEntities = append(groupRoleEntities, ToGroupRoleEntity(groupRoleModel))
+	}
+	return groupRoleEntities
+}

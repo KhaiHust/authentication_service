@@ -111,6 +111,11 @@ var errorResponseMap = map[int]ErrorResponse{
 		ServiceCode: WrongPasswordErrCode,
 		Message:     WrongPasswordMessage,
 	},
+	GeneralForbidden: {
+		HTTPCode:    http.StatusForbidden,
+		ServiceCode: GeneralForbidden,
+		Message:     "Forbidden",
+	},
 }
 
 // GetErrorResponse get error response from code

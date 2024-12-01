@@ -10,10 +10,16 @@ import (
 type IGroupService interface {
 	CreateGroup(ctx context.Context, userID int64, dto *request2.CreateGroupDTO) (*entity.GroupEntity, error)
 	AddNewMember(ctx context.Context, userID, groupID int64, email string) (*entity.GroupMemberEntity, error)
+	GetMembers(ctx context.Context, userID, groupID int64) ([]*entity.GroupMemberEntity, error)
 }
 type GroupService struct {
 	createGroupUsecase    usecase.ICreateGroupUsecase
 	addMemberGroupUsecase usecase.IAddMemberGroupUsecase
+	getGroupMemberUseCase usecase.IGetGroupMemberUseCase
+}
+
+func (g GroupService) GetMembers(ctx context.Context, userID, groupID int64) ([]*entity.GroupMemberEntity, error) {
+	return g.getGroupMemberUseCase.GetListMemberByGroupID(ctx, userID, groupID)
 }
 
 func (g GroupService) AddNewMember(ctx context.Context, userID, groupID int64, email string) (*entity.GroupMemberEntity, error) {
@@ -24,9 +30,6 @@ func (g GroupService) CreateGroup(ctx context.Context, userID int64, dto *reques
 	return g.createGroupUsecase.CreateGroup(ctx, userID, dto)
 }
 
-func NewGroupService(createGroupUsecase usecase.ICreateGroupUsecase,
-	addMemberGroupUsecase usecase.IAddMemberGroupUsecase) IGroupService {
-	return &GroupService{createGroupUsecase: createGroupUsecase,
-		addMemberGroupUsecase: addMemberGroupUsecase,
-	}
+func NewGroupService(createGroupUsecase usecase.ICreateGroupUsecase, addMemberGroupUsecase usecase.IAddMemberGroupUsecase, getGroupMemberUseCase usecase.IGetGroupMemberUseCase) IGroupService {
+	return &GroupService{createGroupUsecase: createGroupUsecase, addMemberGroupUsecase: addMemberGroupUsecase, getGroupMemberUseCase: getGroupMemberUseCase}
 }

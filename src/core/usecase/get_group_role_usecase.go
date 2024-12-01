@@ -12,10 +12,15 @@ import (
 
 type IGetGroupRoleUsecase interface {
 	GetRoleByCode(ctx context.Context, code string) (*entity.GroupRoleEntity, error)
+	GetRoleByIDs(ctx context.Context, ids []int64) ([]*entity.GroupRoleEntity, error)
 }
 type GetGroupRoleUsecase struct {
 	groupRolePort port.IGroupRolePort
 	cachePort     port.ICachePort
+}
+
+func (g GetGroupRoleUsecase) GetRoleByIDs(ctx context.Context, ids []int64) ([]*entity.GroupRoleEntity, error) {
+	return g.groupRolePort.GetRoleByIDs(ctx, ids)
 }
 
 func (g GetGroupRoleUsecase) GetRoleByCode(ctx context.Context, code string) (*entity.GroupRoleEntity, error) {

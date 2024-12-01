@@ -102,3 +102,29 @@ func (g GroupController) AddMember(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, response.ToAddNewMemberResp(groupMember))
 }
+
+func (g GroupController) GetListMember(c *gin.Context) {
+	groupID, err := strconv.ParseInt(c.Param("groupID"), 10, 64)
+	if err != nil {
+		log.Error(c, "error when parsing group id", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userID, err := g.GetUserID(c)
+	if err != nil {
+		log.Error(c, "error when getting user id", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	groupMembers, err := g.groupService.GetMembers(c, userID, groupID)
+	if err != nil {
+		log.Error(c, "error when getting list member", err)
+		if err.Error() == constant.ErrForbiddenGetMember {
+			apihelper.AbortErrorHandle(c, common.GeneralForbidden)
+			return
+		}
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.ToListGroupMemberResponse(groupMembers))
+}

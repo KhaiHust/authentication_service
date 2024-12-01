@@ -39,5 +39,6 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 	{
 		userV1.POST("/group", p.GroupController.CreateGroup)
 		userV1.POST("/group/add", p.GroupController.AddMember)
+		userV1.GET("/group/:groupID/members", p.GroupController.GetListMember)
 	}
 }

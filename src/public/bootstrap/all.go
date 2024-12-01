@@ -53,6 +53,7 @@ func All() fx.Option {
 		fx.Provide(postgres.NewGroupRepositoryAdapter),
 		fx.Provide(postgres.NewGroupRoleRepositoryAdapter),
 		fx.Provide(postgres.NewGroupMemberRepositoryAdapter),
+		fx.Provide(postgres.NewUserProfileRepositoryAdapter),
 
 		//Provide usecase
 		fx.Provide(usecase.NewDatabaseTransactionUsecase),
@@ -66,6 +67,7 @@ func All() fx.Option {
 		fx.Provide(usecase.NewCreateGroupUsecase),
 		fx.Provide(usecase.NewAddMemberGroupUsecase),
 		fx.Provide(usecase.NewGetGroupUseCase),
+		fx.Provide(usecase.NewGetGroupMemberUseCase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),

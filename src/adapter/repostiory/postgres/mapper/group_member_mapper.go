@@ -27,3 +27,10 @@ func ToGroupMemberEntity(groupMemberModel *model.GroupMemberModel) *entity.Group
 		RoleID:  groupMemberModel.RoleID,
 	}
 }
+func ToListGroupMemberEntity(groupMemberModels []*model.GroupMemberModel) []*entity.GroupMemberEntity {
+	groupMemberEntities := make([]*entity.GroupMemberEntity, 0)
+	for _, groupMemberModel := range groupMemberModels {
+		groupMemberEntities = append(groupMemberEntities, ToGroupMemberEntity(groupMemberModel))
+	}
+	return groupMemberEntities
+}
