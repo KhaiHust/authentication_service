@@ -15,6 +15,24 @@ type GroupMemberRepositoryAdapter struct {
 	base
 }
 
+func (g GroupMemberRepositoryAdapter) GetMembersByGroupAndUserIDs(ctx context.Context, groupID int64, userIDs []int64) ([]*entity.GroupMemberEntity, error) {
+	groupMemberModels := make([]*model.GroupMemberModel, 0)
+	if err := g.db.WithContext(ctx).Model(&model.GroupMemberModel{}).Where("group_id = ? AND user_id IN (?)", groupID, userIDs).Find(&groupMemberModels).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToListGroupMemberEntity(groupMemberModels), nil
+}
+
+func (g GroupMemberRepositoryAdapter) DeleteMemberByGroupIDAndUserID(ctx context.Context, tx *gorm.DB, groupID int64, userID int64) error {
+	if err := tx.WithContext(ctx).Where("group_id = ? AND user_id = ?", groupID, userID).Delete(&model.GroupMemberModel{}).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New(constant.ErrGroupMemberNotFound)
+		}
+		return err
+	}
+	return nil
+}
+
 func (g GroupMemberRepositoryAdapter) GetListMemberByGroupID(ctx context.Context, groupID int64) ([]*entity.GroupMemberEntity, error) {
 	groupMemberModels := make([]*model.GroupMemberModel, 0)
 	if err := g.db.WithContext(ctx).Model(&model.GroupMemberModel{}).Where("group_id = ?", groupID).Find(&groupMemberModels).Error; err != nil {

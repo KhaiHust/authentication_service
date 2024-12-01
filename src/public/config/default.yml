@@ -12,3 +12,4 @@ app:
       protectedUrls:
         - { urlPattern: "/v1/user/group/*", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/user/group/*", method: GET,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/user/group/*", method: DELETE,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }

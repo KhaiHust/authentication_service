@@ -68,6 +68,7 @@ func All() fx.Option {
 		fx.Provide(usecase.NewAddMemberGroupUsecase),
 		fx.Provide(usecase.NewGetGroupUseCase),
 		fx.Provide(usecase.NewGetGroupMemberUseCase),
+		fx.Provide(usecase.NewRemoveMemberUsecase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),

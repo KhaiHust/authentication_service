@@ -128,3 +128,28 @@ func (g GroupController) GetListMember(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, response.ToListGroupMemberResponse(groupMembers))
 }
+func (g GroupController) RemoveMember(c *gin.Context) {
+	var req request.RemoveMemberRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(c, "error when binding request", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userID, err := g.GetUserID(c)
+	if err != nil {
+		log.Error(c, "error when getting user id", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	err = g.groupService.RemoveMember(c, userID, req.GroupID, req.UserID)
+	if err != nil {
+		log.Error(c, "error when removing member", err)
+		if err.Error() == constant.ErrForbiddenRemoveMember {
+			apihelper.AbortErrorHandle(c, common.GeneralForbidden)
+			return
+		}
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, nil)
+}
