@@ -31,8 +31,8 @@ jobs:
       - name: Build and Push Public Service
         uses: docker/build-push-action@v5
         with:
-          context: ./                            # Change context to root of repository
-          dockerfile: ./devops/dockerfile/Dockerfile-public  # Provide path relative to repository root
+          context: ./                        # Change context to root of repository
+          dockerfile: ./devops/docker/Dockerfile-public  # Provide path relative to repository root
           push: true
           tags: khaihust/auth-public-service:latest
 
@@ -40,7 +40,7 @@ jobs:
       - name: Build and Push Migration Service
         uses: docker/build-push-action@v5
         with:
-          context: ./                            # Change context to root of repository
-          dockerfile: ./devops/dockerfile/Dockerfile-migration  # Provide path relative to repository root
+          context: ./                         # Change context to root of repository
+          dockerfile: ./devops/docker/Dockerfile-migration  # Provide path relative to repository root
           push: true
           tags: khaihust/auth-migration-service:latest
