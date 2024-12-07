@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-public-service
+  labels:
+    app: auth-public-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-public-service
+  template:
+    metadata:
+      labels:
+        app: auth-public-service
+    spec:
+      containers:
+        - name: auth-public-service
+          image: your-dockerhub-username/auth-public-service:latest
+          ports:
+            - containerPort: 8080
