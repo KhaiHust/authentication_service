@@ -29,18 +29,18 @@ jobs:
 
       # Step 4: Build and Push Public Service Image
       - name: Build and Push Public Service
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v4
         with:
-          context: ./                        # Change context to root of repository
-          dockerfile: ./devops/docker/Dockerfile-public  # Provide path relative to repository root
+          context: ./                     # Change context to root of repository
+          file: ./devops/docker/public.Dockerfile  # Provide path relative to repository root
           push: true
           tags: khaihust/auth-public-service:latest
 
       # Step 5: Build and Push Migration Service Image
       - name: Build and Push Migration Service
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v4
         with:
-          context: ./                         # Change context to root of repository
-          dockerfile: ./devops/docker/Dockerfile-migration  # Provide path relative to repository root
+          context: ./                     # Change context to root of repository
+          file: ./devops/docker/migration.Dockerfile  # Provide path relative to repository root
           push: true
           tags: khaihust/auth-migration-service:latest
