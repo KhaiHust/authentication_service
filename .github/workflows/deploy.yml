@@ -1,0 +1,31 @@
+name: Manual Deploy to Kubernetes
+
+on:
+  workflow_dispatch:  # Allows manual trigger via GitHub Actions UI
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Set up kubectl
+      - name: Set up Kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      # Step 2: Configure Kubernetes Cluster
+      - name: Configure Kubernetes Cluster
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: echo "${KUBECONFIG}" > ~/.kube/config
+
+      # Step 3: Deploy Public Service
+      - name: Deploy Public Service
+        run: |
+          kubectl apply -f devops/k8s/public-deployment.yaml
+
+      # Step 4: Deploy Migration Service
+      - name: Deploy Migration Service
+        run: |
+          kubectl apply -f devops/k8s/migration-deployment.yaml

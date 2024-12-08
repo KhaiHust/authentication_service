@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-migration-service
+  labels:
+    app: auth-migration-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-migration-service
+  template:
+    metadata:
+      labels:
+        app: auth-migration-service
+    spec:
+      containers:
+        - name: auth-migration-service
+          image: khaihust/auth-migration-service:latest
+          ports:
+            - containerPort: 8081
