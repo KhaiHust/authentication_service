@@ -36,7 +36,12 @@ func (v VerifyOtpUseCase) VerifyOtpRegister(ctx *context.Context, email string, 
 	if (err != nil && err.Error() == constant.ErrCacheKeyNil) || cachedOtp == "" {
 		return errors.New(constant.ErrOtpNotFound)
 	}
-	if cachedOtp != otp {
+	cachedOtpStr, ok := cachedOtp.(string)
+	if !ok {
+		return errors.New(constant.ErrOtpInvalid)
+	}
+	cachedOtpStr = cachedOtpStr[1 : len(cachedOtpStr)-1]
+	if cachedOtpStr != otp {
 		return errors.New(constant.ErrOtpInvalid)
 	}
 	err = v.cachePort.DeleteFromCache(*ctx, key)
@@ -75,6 +80,11 @@ func (v VerifyOtpUseCase) VerifyOtpRegister(ctx *context.Context, email string, 
 	return nil
 }
 
-func NewVerifyOtpUseCase(cachePort port.ICachePort) IVerifyOtpUseCase {
-	return &VerifyOtpUseCase{cachePort: cachePort}
+func NewVerifyOtpUseCase(cachePort port.ICachePort, getUserUsecase IGetUserUsecase, updateUserUseCase IUpdateUserUseCase, databaseTransactionUsecase IDatabaseTransactionUsecase) IVerifyOtpUseCase {
+	return &VerifyOtpUseCase{
+		cachePort:                  cachePort,
+		getUserUsecase:             getUserUsecase,
+		updateUserUseCase:          updateUserUseCase,
+		databaseTransactionUsecase: databaseTransactionUsecase,
+	}
 }

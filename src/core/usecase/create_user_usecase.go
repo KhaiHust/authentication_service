@@ -15,8 +15,9 @@ type ICreateUserUsecase interface {
 	CreateNewUser(ctx *context.Context, userEntity *entity.UserEntity) (*entity.UserEntity, error)
 }
 type CreateUserUsecase struct {
-	dbTxUsecase IDatabaseTransactionUsecase
-	userPort    port.IUserPort
+	dbTxUsecase     IDatabaseTransactionUsecase
+	userPort        port.IUserPort
+	userProfilePort port.IUserProfilePort
 }
 
 func (c *CreateUserUsecase) CreateNewUser(ctx *context.Context, userEntity *entity.UserEntity) (*entity.UserEntity, error) {
@@ -53,6 +54,17 @@ func (c *CreateUserUsecase) CreateNewUser(ctx *context.Context, userEntity *enti
 		log.Error(ctx, "SaveUser error: %v", err)
 		return nil, err
 	}
+	//create user profile
+	userProfile := &entity.UserProfileEntity{
+		UserID: userEntity.ID,
+		Email:  userEntity.Email,
+		Name:   userEntity.Name,
+	}
+	userProfile, err = c.userProfilePort.CreateNewProfile(*ctx, tx, userProfile)
+	if err != nil {
+		log.Error(ctx, "CreateNewProfile error: %v", err)
+		return nil, err
+	}
 	errCommitTxn := c.dbTxUsecase.Commit(tx)
 	if errCommitTxn != nil {
 		log.Error(ctx, "Commit error: %v", errCommitTxn)
@@ -62,9 +74,10 @@ func (c *CreateUserUsecase) CreateNewUser(ctx *context.Context, userEntity *enti
 	return userEntity, nil
 }
 
-func NewCreateUserUsecase(dbTxUsecase IDatabaseTransactionUsecase, userPort port.IUserPort) ICreateUserUsecase {
+func NewCreateUserUsecase(dbTxUsecase IDatabaseTransactionUsecase, userPort port.IUserPort, userProfilePort port.IUserProfilePort) ICreateUserUsecase {
 	return &CreateUserUsecase{
-		dbTxUsecase: dbTxUsecase,
-		userPort:    userPort,
+		dbTxUsecase:     dbTxUsecase,
+		userPort:        userPort,
+		userProfilePort: userProfilePort,
 	}
 }

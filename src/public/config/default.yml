@@ -8,6 +8,7 @@ app:
         - /actuator/info
         - /public/v1/user
         - /public/v1/user/send-verification-code
+        - /public/v1/user/verify-email
         - /public/v1/user/login
       protectedUrls:
         - { urlPattern: "/v1/user/group/*", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
