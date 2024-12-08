@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: auth-public-service
-          image: your-dockerhub-username/auth-public-service:latest
+          image: khaihust/auth-public-service:latest
           ports:
             - containerPort: 8080

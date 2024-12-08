@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: auth-migration-service
-          image: your-dockerhub-username/auth-migration-service:latest
+          image: khaihust/auth-migration-service:latest
           ports:
             - containerPort: 8081
