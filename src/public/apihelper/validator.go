@@ -7,6 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"reflect"
 	"strconv"
+	"time"
 )
 
 // TagMessage tag message for struct validate
@@ -20,6 +21,12 @@ type CustomValidate struct {
 	Message *string
 }
 
+// ValidateUnixTime checks if the input is an int64 Unix timestamp and ensures it is >= time.Now()
+func ValidateDueDateTime(fl validator.FieldLevel) bool {
+	input := fl.Field().Int()
+	// Compare the Unix timestamp with the current time
+	return input >= time.Now().Unix()
+}
 func (customValidate *CustomValidate) init(validate *validator.Validate) {
 	customValidate.Validate = validate
 }
@@ -48,6 +55,8 @@ func (customValidate *CustomValidate) Struct(current interface{}) error {
 // TSCustomValidator custom validator
 func TSCustomValidator() *CustomValidate {
 	customValidate := &CustomValidate{}
-	customValidate.init(validator.New())
+	validator := validator.New()
+	_ = validator.RegisterValidation("due_date_time", ValidateDueDateTime)
+	customValidate.init(validator)
 	return customValidate
 }

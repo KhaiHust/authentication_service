@@ -3,6 +3,7 @@ package mapper
 import (
 	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres/model"
 	"github.com/KhaiHust/authen_service/core/entity"
+	"time"
 )
 
 func ToShoppingListEntity(model *model.ShoppingListModel) *entity.ShoppingListEntity {
@@ -16,6 +17,7 @@ func ToShoppingListEntity(model *model.ShoppingListModel) *entity.ShoppingListEn
 		Description: model.Description,
 		CreatedBy:   model.CreatedBy,
 		AssignedTo:  model.AssignedTo,
+		DueDate:     model.DueDate.Unix(),
 	}
 }
 func ToShoppingListModel(entityShoppingListEntity *entity.ShoppingListEntity) *model.ShoppingListModel {
@@ -27,5 +29,6 @@ func ToShoppingListModel(entityShoppingListEntity *entity.ShoppingListEntity) *m
 		Description: entityShoppingListEntity.Description,
 		CreatedBy:   entityShoppingListEntity.CreatedBy,
 		AssignedTo:  entityShoppingListEntity.AssignedTo,
+		DueDate:     time.Unix(entityShoppingListEntity.DueDate, 0),
 	}
 }

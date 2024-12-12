@@ -27,18 +27,23 @@ const (
 	OTPExpiredErrCode     = 400055
 
 	WrongPasswordErrCode = 400056
+
+	InvalidShoppingListName = 400057
+	InvalidDueDate          = 400058
 )
 
 const (
-	InvalidEmailMessage    = "Vui lòng cung cấp email hợp lệ!"
-	InvalidPasswordMessage = "Vui lòng cung cấp mật khẩu dài hơn 6 ký tự và ít hơn 20 ký tự!"
-	InvalidNameMessage     = "Vui lòng cung cấp tên dài hơn 3 ký tự và ít hơn 30 ký tự!"
-	ExistedEmailMessage    = "Một tài khoản đã tồn tại với email này!"
-	UserNotExistMessage    = "Không tìm thấy tài khoản với địa chỉ email này."
-	OtpNotProvidedMessage  = "Vui lòng cung cấp mã OTP!"
-	OtpInvalidMessage      = "Mã OTP không hợp lệ!"
-	OTPExpiredMessage      = "Mã OTP đã hết hạn!"
-	WrongPasswordMessage   = "Email / Mật khẩu không đúng!"
+	InvalidEmailMessage            = "Vui lòng cung cấp email hợp lệ!"
+	InvalidPasswordMessage         = "Vui lòng cung cấp mật khẩu dài hơn 6 ký tự và ít hơn 20 ký tự!"
+	InvalidNameMessage             = "Vui lòng cung cấp tên dài hơn 3 ký tự và ít hơn 30 ký tự!"
+	ExistedEmailMessage            = "Một tài khoản đã tồn tại với email này!"
+	UserNotExistMessage            = "Không tìm thấy tài khoản với địa chỉ email này."
+	OtpNotProvidedMessage          = "Vui lòng cung cấp mã OTP!"
+	OtpInvalidMessage              = "Mã OTP không hợp lệ!"
+	OTPExpiredMessage              = "Mã OTP đã hết hạn!"
+	WrongPasswordMessage           = "Email / Mật khẩu không đúng!"
+	InvalidShoppingListNameMessage = "Vui lòng cung cấp tên danh sách mua sắm hợp lệ!"
+	InvalidDueDateMessage          = "Vui lòng cung cấp ngày hợp lệ!"
 )
 
 const ()
@@ -115,6 +120,16 @@ var errorResponseMap = map[int]ErrorResponse{
 		HTTPCode:    http.StatusForbidden,
 		ServiceCode: GeneralForbidden,
 		Message:     "Forbidden",
+	},
+	InvalidShoppingListName: {
+		HTTPCode:    http.StatusBadRequest,
+		ServiceCode: InvalidShoppingListName,
+		Message:     InvalidShoppingListNameMessage,
+	},
+	InvalidDueDate: {
+		HTTPCode:    http.StatusBadRequest,
+		ServiceCode: InvalidDueDate,
+		Message:     InvalidDueDateMessage,
 	},
 }
 

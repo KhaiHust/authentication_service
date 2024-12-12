@@ -6,4 +6,5 @@ type ShoppingListEntity struct {
 	Description string
 	CreatedBy   int64
 	AssignedTo  int64
+	DueDate     int64
 }

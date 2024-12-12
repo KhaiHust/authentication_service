@@ -5,7 +5,7 @@ import (
 	"github.com/KhaiHust/authen_service/core/entity"
 )
 
-func ToShoppingListGroupEntity(model *model.ShoppingListGroup) *entity.ShoppingListGroupEntity {
+func ToShoppingListGroupEntity(model *model.ShoppingListGroupModel) *entity.ShoppingListGroupEntity {
 	return &entity.ShoppingListGroupEntity{
 		BaseEntity: entity.BaseEntity{
 			ID:        model.ID,
@@ -16,8 +16,8 @@ func ToShoppingListGroupEntity(model *model.ShoppingListGroup) *entity.ShoppingL
 		GroupID:        model.GroupID,
 	}
 }
-func ToShoppingListGroupModel(entityShoppingListGroupEntity *entity.ShoppingListGroupEntity) *model.ShoppingListGroup {
-	return &model.ShoppingListGroup{
+func ToShoppingListGroupModel(entityShoppingListGroupEntity *entity.ShoppingListGroupEntity) *model.ShoppingListGroupModel {
+	return &model.ShoppingListGroupModel{
 		BaseModel: model.BaseModel{
 			ID: entityShoppingListGroupEntity.ID,
 		},

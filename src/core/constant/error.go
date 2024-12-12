@@ -17,6 +17,7 @@ const (
 
 	ErrForbiddenAddMember = "forbidden add member"
 
-	ErrForbiddenRemoveMember = "forbidden remove member"
-	ErrForbiddenGetMember    = "forbidden get member"
+	ErrForbiddenRemoveMember       = "forbidden remove member"
+	ErrForbiddenGetMember          = "forbidden get member"
+	ErrForbiddenCreateShoppingList = "forbidden create shopping list"
 )

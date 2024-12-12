@@ -54,6 +54,8 @@ func All() fx.Option {
 		fx.Provide(postgres.NewGroupRoleRepositoryAdapter),
 		fx.Provide(postgres.NewGroupMemberRepositoryAdapter),
 		fx.Provide(postgres.NewUserProfileRepositoryAdapter),
+		fx.Provide(postgres.NewShoppingListRepoAdapter),
+		fx.Provide(postgres.NewShoppingListGroupRepoAdapter),
 
 		//Provide usecase
 		fx.Provide(usecase.NewDatabaseTransactionUsecase),
@@ -69,6 +71,7 @@ func All() fx.Option {
 		fx.Provide(usecase.NewGetGroupUseCase),
 		fx.Provide(usecase.NewGetGroupMemberUseCase),
 		fx.Provide(usecase.NewRemoveMemberUsecase),
+		fx.Provide(usecase.NewCreateShoppingListUseCase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),
@@ -77,12 +80,14 @@ func All() fx.Option {
 		fx.Provide(service.NewUserService),
 		fx.Provide(service.NewOtpService),
 		fx.Provide(service.NewGroupService),
+		fx.Provide(service.NewShoppingListService),
 
 		//Provide controller
 		fx.Provide(controller.NewBaseController),
 		fx.Provide(controller.NewUserController),
 		fx.Provide(controller.NewOtpController),
 		fx.Provide(controller.NewGroupController),
+		fx.Provide(controller.NewShoppingListController),
 
 		// Provide gin http server auto config,
 		// actuator endpoints and application routers

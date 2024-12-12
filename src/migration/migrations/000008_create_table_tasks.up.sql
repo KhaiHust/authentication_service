@@ -4,8 +4,9 @@ CREATE TABLE shopping_lists (
     DESCRIPTION TEXT,
     created_by INT NOT NULL,
     assigned_to INT NOT NULL,
-    PRIMARY KEY (created_by) REFERENCES users (id),
-    PRIMARY KEY (assigned_to) REFERENCES users (id),
+    due_date TIMESTAMP NOT NULL,
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (assigned_to) REFERENCES users (id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
