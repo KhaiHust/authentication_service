@@ -22,6 +22,9 @@ func (o *OtpService) SendOtpForRegistration(ctx context.Context, email string) e
 	return o.sendOtpUsecase.SendOtpForRegistration(&ctx, email)
 }
 
-func NewOtpService(sendOtpUsecase usecase.ISendOtpUseCase) IOtpService {
-	return &OtpService{sendOtpUsecase: sendOtpUsecase}
+func NewOtpService(sendOtpUsecase usecase.ISendOtpUseCase, verifyOtpUsecase usecase.IVerifyOtpUseCase) IOtpService {
+	return &OtpService{
+		sendOtpUsecase:   sendOtpUsecase,
+		verifyOtpUsecase: verifyOtpUsecase,
+	}
 }

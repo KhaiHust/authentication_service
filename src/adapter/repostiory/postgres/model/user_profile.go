@@ -4,11 +4,11 @@ import "time"
 
 type UserProfileModel struct {
 	BaseModel
-	UserID         int64     `json:"user_id"`
-	Email          string    `json:"email"`
-	Name           string    `json:"name"`
-	DoB            time.Time `json:"dob"`
-	AvatarImageUrl string    `json:"avatar_image_url"`
+	UserID         int64     `gorm:"column:user_id"`
+	Email          string    `gorm:"column:email"`
+	Name           string    `gorm:"column:name"`
+	DoB            time.Time `gorm:"column:dob"`
+	AvatarImageUrl string    `gorm:"column:avatar_image_url"`
 }
 
 func (UserProfileModel) TableName() string {

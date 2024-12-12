@@ -13,6 +13,14 @@ type UserProfileRepositoryAdapter struct {
 	*base
 }
 
+func (u UserProfileRepositoryAdapter) CreateNewProfile(ctx context.Context, txn *gorm.DB, userProfile *entity.UserProfileEntity) (*entity.UserProfileEntity, error) {
+	userProfileModel := mapper.ToUserProfileModel(userProfile)
+	if err := txn.WithContext(ctx).Create(userProfileModel).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToUserProfileEntity(userProfileModel), nil
+}
+
 func (u UserProfileRepositoryAdapter) GetUserProfilesByUserIDs(ctx context.Context, userIDs []int64) ([]*entity.UserProfileEntity, error) {
 	var userProfileModels []*model.UserProfileModel
 

@@ -12,7 +12,6 @@ func AbortErrorHandle(c *gin.Context, code int) {
 	c.JSON(errorResponse.HTTPCode, gin.H{
 		"code":    errorResponse.ServiceCode,
 		"message": errorResponse.Message,
-		"data":    nil,
 	})
 }
 
