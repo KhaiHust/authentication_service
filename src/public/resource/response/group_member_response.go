@@ -35,6 +35,9 @@ func ToGroupMemberResponse(entity *entity.GroupMemberEntity) *GroupMemberRespons
 }
 
 func ToUserProfileResponse(profile *entity.UserProfileEntity) *UserProfileResponse {
+	if profile == nil {
+		return nil
+	}
 	return &UserProfileResponse{
 		ID:             profile.ID,
 		UserID:         profile.UserID,

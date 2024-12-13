@@ -12,13 +12,14 @@ import (
 
 type RegisterRoutersIn struct {
 	fx.In
-	App                *golib.App
-	Engine             *gin.Engine
-	Actuator           *actuator.Endpoint
-	UserController     *controller.UserController
-	OtpController      *controller.OtpController
-	SecurityProperties *config.HttpSecurityProperties
-	GroupController    *controller.GroupController
+	App                    *golib.App
+	Engine                 *gin.Engine
+	Actuator               *actuator.Endpoint
+	UserController         *controller.UserController
+	OtpController          *controller.OtpController
+	SecurityProperties     *config.HttpSecurityProperties
+	GroupController        *controller.GroupController
+	ShoppingListController *controller.ShoppingListController
 }
 
 func RegisterGinRouters(p RegisterRoutersIn) {
@@ -41,5 +42,11 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		userV1.POST("/group/add", p.GroupController.AddMember)
 		userV1.GET("/group/:groupID/members", p.GroupController.GetListMember)
 		userV1.DELETE("/group", p.GroupController.RemoveMember)
+	}
+	shoppingV1 := router.Group("/public/v1/shopping", middleware.GetInfoFromToken(p.SecurityProperties.Jwt))
+	{
+		shoppingV1.POST("", p.ShoppingListController.CreateNewShoppingList)
+		shoppingV1.PUT("/:shoppingListId", p.ShoppingListController.UpdateShoppingList)
+		shoppingV1.DELETE("/:shoppingListId", p.ShoppingListController.DeleteShoppingList)
 	}
 }
