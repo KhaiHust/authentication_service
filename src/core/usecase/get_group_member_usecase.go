@@ -11,12 +11,25 @@ import (
 
 type IGetGroupMemberUseCase interface {
 	GetListMemberByGroupID(ctx context.Context, userID, groupID int64) ([]*entity.GroupMemberEntity, error)
+	IsMemberOfGroup(ctx context.Context, userID, groupID int64) (bool, error)
 }
 type GetGroupMemberUseCase struct {
 	groupMemberPort     port.IGroupMemberPort
 	getGroupUseCase     IGetGroupUseCase
 	getGroupRoleUsecase IGetGroupRoleUsecase
 	getUserProfilePort  port.IUserProfilePort
+}
+
+func (g GetGroupMemberUseCase) IsMemberOfGroup(ctx context.Context, userID, groupID int64) (bool, error) {
+	groupMember, err := g.groupMemberPort.GetGroupMemberByGroupIDAndUserID(ctx, groupID, userID)
+	if err != nil {
+		log.Error(ctx, "Get group member by group id and user id error: %v", err)
+		return false, err
+	}
+	if groupMember == nil {
+		return false, nil
+	}
+	return true, nil
 }
 
 func (g GetGroupMemberUseCase) GetListMemberByGroupID(ctx context.Context, userID, groupID int64) ([]*entity.GroupMemberEntity, error) {
