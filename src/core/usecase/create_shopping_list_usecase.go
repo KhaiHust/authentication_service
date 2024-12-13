@@ -86,21 +86,16 @@ func (c CreateShoppingListUseCase) CreateNewShoppingList(ctx context.Context, re
 			log.Info(ctx, "CreateNewShoppingList: Rollback successfully")
 		}
 	}()
+
+	if req.GroupID > 0 {
+		shoppingList.GroupID = &req.GroupID
+	}
 	shoppingList, err = c.shoppingListPort.CreateNewShoppingList(ctx, tx, shoppingList)
 	if err != nil {
 		log.Error(ctx, "CreateNewShoppingList: CreateNewShoppingList error", err)
 		return nil, err
 	}
-	if req.GroupID > 0 {
-		_, err = c.shoppingListGroupPort.CreateNewShoppingListGroup(ctx, tx, &entity.ShoppingListGroupEntity{
-			ShoppingListID: shoppingList.ID,
-			GroupID:        req.GroupID,
-		})
-		if err != nil {
-			log.Error(ctx, "CreateNewShoppingList: CreateNewShoppingListGroup error", err)
-			return nil, err
-		}
-	}
+
 	errCommit := c.databaseTransactionUsecase.Commit(tx)
 	if errCommit != nil {
 		log.Error(ctx, "CreateNewShoppingList: Commit error", errCommit)

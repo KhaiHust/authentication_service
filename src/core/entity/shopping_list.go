@@ -7,4 +7,5 @@ type ShoppingListEntity struct {
 	CreatedBy   int64
 	AssignedTo  int64
 	DueDate     int64
+	GroupID     *int64
 }

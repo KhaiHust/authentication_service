@@ -18,6 +18,7 @@ func ToShoppingListEntity(model *model.ShoppingListModel) *entity.ShoppingListEn
 		CreatedBy:   model.CreatedBy,
 		AssignedTo:  model.AssignedTo,
 		DueDate:     model.DueDate.Unix(),
+		GroupID:     model.GroupID,
 	}
 }
 func ToShoppingListModel(entityShoppingListEntity *entity.ShoppingListEntity) *model.ShoppingListModel {
@@ -30,5 +31,6 @@ func ToShoppingListModel(entityShoppingListEntity *entity.ShoppingListEntity) *m
 		CreatedBy:   entityShoppingListEntity.CreatedBy,
 		AssignedTo:  entityShoppingListEntity.AssignedTo,
 		DueDate:     time.Unix(entityShoppingListEntity.DueDate, 0),
+		GroupID:     entityShoppingListEntity.GroupID,
 	}
 }

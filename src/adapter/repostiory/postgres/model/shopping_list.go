@@ -9,6 +9,7 @@ type ShoppingListModel struct {
 	DueDate     time.Time `gorm:"column:due_date"`
 	CreatedBy   int64     `gorm:"column:created_by"`
 	AssignedTo  int64     `gorm:"column:assigned_to"`
+	GroupID     *int64    `gorm:"column:group_id"`
 }
 
 func (m *ShoppingListModel) TableName() string {

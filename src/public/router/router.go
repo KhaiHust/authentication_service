@@ -46,5 +46,7 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 	shoppingV1 := router.Group("/public/v1/shopping", middleware.GetInfoFromToken(p.SecurityProperties.Jwt))
 	{
 		shoppingV1.POST("", p.ShoppingListController.CreateNewShoppingList)
+		shoppingV1.PUT("/:shoppingListId", p.ShoppingListController.UpdateShoppingList)
+		shoppingV1.DELETE("/:shoppingListId", p.ShoppingListController.DeleteShoppingList)
 	}
 }

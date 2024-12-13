@@ -13,6 +13,11 @@ type ShoppingListGroupRepoAdapter struct {
 	base
 }
 
+func (s ShoppingListGroupRepoAdapter) GetShoppingListGroupByShoppingListID(ctx context.Context, shoppingListID int64) (*entity.ShoppingListGroupEntity, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s ShoppingListGroupRepoAdapter) CreateNewShoppingListGroup(ctx context.Context, tx *gorm.DB, shoppingListGroup *entity.ShoppingListGroupEntity) (*entity.ShoppingListGroupEntity, error) {
 	sLGModel := mapper.ToShoppingListGroupModel(shoppingListGroup)
 	if err := tx.WithContext(ctx).Model(&model.ShoppingListGroupModel{}).Create(sLGModel).Error; err != nil {
