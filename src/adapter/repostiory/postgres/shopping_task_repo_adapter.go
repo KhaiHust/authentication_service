@@ -13,6 +13,26 @@ type ShoppingTaskRepoAdapter struct {
 	base
 }
 
+func (s *ShoppingTaskRepoAdapter) GetTaskByID(ctx context.Context, taskID int64) (*entity.ShoppingTaskEntity, error) {
+	var shoppingTaskModel model.ShoppingTaskModel
+	if err := s.db.WithContext(ctx).Where("id = ?", taskID).First(&shoppingTaskModel).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToShoppingTaskEntity(&shoppingTaskModel), nil
+}
+
+func (s *ShoppingTaskRepoAdapter) UpdateTaskByID(ctx context.Context, tx *gorm.DB, task *entity.ShoppingTaskEntity) (*entity.ShoppingTaskEntity, error) {
+	shoppingTaskModel := mapper.ToShoppingTaskModel(task)
+	if err := tx.WithContext(ctx).
+		Model(&model.ShoppingTaskModel{}).
+		Where("id = ?", shoppingTaskModel.ID).
+		Updates(&shoppingTaskModel).
+		Scan(&shoppingTaskModel).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToShoppingTaskEntity(shoppingTaskModel), nil
+}
+
 func (s *ShoppingTaskRepoAdapter) DeleteTaskByID(ctx context.Context, tx *gorm.DB, taskID int64) error {
 	if err := tx.WithContext(ctx).Where("id = ?", taskID).Delete(&model.ShoppingTaskModel{}).Error; err != nil {
 		return err

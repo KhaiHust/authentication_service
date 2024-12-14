@@ -103,6 +103,48 @@ func (s *ShoppingTaskController) DeleteTaskByID(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, nil)
 }
+func (s *ShoppingTaskController) UpdateTaskByID(c *gin.Context) {
+	shoppingListId, err := strconv.ParseInt(c.Param("shoppingListId"), 10, 64)
+	if err != nil {
+		log.Error(c, "UpdateTaskByID: ParseInt error", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	taskId, err := strconv.ParseInt(c.Param("taskId"), 10, 64)
+	if err != nil {
+		log.Error(c, "UpdateTaskByID: ParseInt error", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	var req request.UpdateTaskRequest
+	if err := c.ShouldBind(&req); err != nil {
+		log.Error(c, "UpdateTaskByID: ShouldBind")
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+	}
+	if err := s.Validator.Struct(req); err != nil {
+		log.Error(c, "UpdateTaskByID: Validator error", err)
+		errCode, err := strconv.ParseInt(err.Error(), 10, 64)
+		if err != nil {
+			log.Error(c, "UpdateTaskByID: ParseInt error", err)
+			apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+			return
+		}
+		apihelper.AbortErrorHandle(c, int(errCode))
+		return
+	}
+	userId, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "UpdateTaskByID: GetUserID error", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	result, err := s.shoppingTaskService.UpdateTaskByID(c, userId, shoppingListId, taskId, request.ToUpdateTaskDto(&req))
+	if err != nil {
+		log.Error(c, "UpdateTaskByID: UpdateTaskByID error", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+	}
+	apihelper.SuccessfulHandle(c, response.ToUpdateTaskResponse(shoppingListId, result))
+}
 func NewShoppingTaskController(base *BaseController, shoppingTaskService service.IShoppingTaskService) *ShoppingTaskController {
 	return &ShoppingTaskController{BaseController: *base,
 		shoppingTaskService: shoppingTaskService}

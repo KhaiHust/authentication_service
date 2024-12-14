@@ -52,5 +52,6 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		shoppingV1.POST("/:shoppingListId/tasks", p.ShoppingTaskController.CreateNewShoppingTask)
 		shoppingV1.GET("/:shoppingListId/tasks", p.ShoppingTaskController.GetShoppingTasksByShoppingListID)
 		shoppingV1.DELETE("/:shoppingListId/tasks/:taskId", p.ShoppingTaskController.DeleteTaskByID)
+		shoppingV1.PUT("/:shoppingListId/tasks/:taskId", p.ShoppingTaskController.UpdateTaskByID)
 	}
 }

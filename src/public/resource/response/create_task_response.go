@@ -15,6 +15,17 @@ type Tasks struct {
 	UpdatedAt int64  `json:"updated_at"`
 }
 
+func ToUpdateTaskResponse(shoppingListID int64, task *entity.ShoppingTaskEntity) *Tasks {
+	return &Tasks{
+		ID:        task.ID,
+		FoodName:  task.FoodName,
+		Quantity:  task.Quantity,
+		Status:    task.Status,
+		CreatedAt: task.CreatedAt,
+		UpdatedAt: task.UpdatedAt,
+	}
+}
+
 func ToCreateTaskResponse(shoppingListID int64, tasks []*entity.ShoppingTaskEntity) *CreateTaskResponse {
 	var response CreateTaskResponse
 	response.ShoppingListID = shoppingListID
