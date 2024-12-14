@@ -20,6 +20,7 @@ type RegisterRoutersIn struct {
 	SecurityProperties     *config.HttpSecurityProperties
 	GroupController        *controller.GroupController
 	ShoppingListController *controller.ShoppingListController
+	ShoppingTaskController *controller.ShoppingTaskController
 }
 
 func RegisterGinRouters(p RegisterRoutersIn) {
@@ -48,5 +49,9 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		shoppingV1.POST("", p.ShoppingListController.CreateNewShoppingList)
 		shoppingV1.PUT("/:shoppingListId", p.ShoppingListController.UpdateShoppingList)
 		shoppingV1.DELETE("/:shoppingListId", p.ShoppingListController.DeleteShoppingList)
+		shoppingV1.POST("/:shoppingListId/tasks", p.ShoppingTaskController.CreateNewShoppingTask)
+		shoppingV1.GET("/:shoppingListId/tasks", p.ShoppingTaskController.GetShoppingTasksByShoppingListID)
+		shoppingV1.DELETE("/:shoppingListId/tasks/:taskId", p.ShoppingTaskController.DeleteTaskByID)
+		shoppingV1.PUT("/:shoppingListId/tasks/:taskId", p.ShoppingTaskController.UpdateTaskByID)
 	}
 }
