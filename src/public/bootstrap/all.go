@@ -77,6 +77,8 @@ func All() fx.Option {
 		fx.Provide(usecase.NewDeleteShoppingListUseCase),
 		fx.Provide(usecase.NewCreateShoppingTaskUsecase),
 		fx.Provide(usecase.NewGetTaskUsecase),
+		fx.Provide(usecase.NewGetShoppingListUsecase),
+		fx.Provide(usecase.NewDeleteTaskUsecase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),

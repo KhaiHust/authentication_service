@@ -9,4 +9,5 @@ import (
 type IShoppingTaskPort interface {
 	CreateNewShoppingTasks(ctx context.Context, tx *gorm.DB, shoppingTasks []*entity.ShoppingTaskEntity) ([]*entity.ShoppingTaskEntity, error)
 	GetShoppingTasksByShoppingListID(ctx context.Context, shoppingListID int64) ([]*entity.ShoppingTaskEntity, error)
+	DeleteTaskByID(ctx context.Context, tx *gorm.DB, taskID int64) error
 }
