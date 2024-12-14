@@ -17,3 +17,4 @@ app:
         - { urlPattern: "/v1/shopping/*", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/shopping/*", method: PUT,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/shopping/*", method: DELETE,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/shopping/*", method: GET,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }

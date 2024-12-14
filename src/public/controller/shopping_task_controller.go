@@ -55,6 +55,27 @@ func (s *ShoppingTaskController) CreateNewShoppingTask(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, response.ToCreateTaskResponse(shoppingListId, result))
 }
+func (s *ShoppingTaskController) GetShoppingTasksByShoppingListID(c *gin.Context) {
+	shoppingListId, err := strconv.ParseInt(c.Param("shoppingListId"), 10, 64)
+	if err != nil {
+		log.Error(c, "GetShoppingTasksByShoppingListID: ParseInt error", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userId, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "GetShoppingTasksByShoppingListID: GetUserID error", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	result, err := s.shoppingTaskService.GetShoppingTasksByShoppingListID(c, userId, shoppingListId)
+	if err != nil {
+		log.Error(c, "GetShoppingTasksByShoppingListID: GetShoppingTasksByShoppingListID error", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.ToCreateTaskResponse(shoppingListId, result))
+}
 func NewShoppingTaskController(base *BaseController, shoppingTaskService service.IShoppingTaskService) *ShoppingTaskController {
 	return &ShoppingTaskController{BaseController: *base,
 		shoppingTaskService: shoppingTaskService}

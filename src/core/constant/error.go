@@ -26,4 +26,5 @@ const (
 	ErrForbiddenDeleteShoppingList = "forbidden delete shopping list"
 
 	ErrForbiddenCreateShoppingTask = "forbidden create shopping task"
+	ErrForbiddenGetShoppingTask    = "forbidden get shopping task"
 )
