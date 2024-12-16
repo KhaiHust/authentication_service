@@ -33,12 +33,22 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_IMAGE }}
 
           # Stop and remove the old container (if running)
-          sudo docker stop my-app-${{ github.event.inputs.environment }} || true
-          sudo docker rm my-app-${{ github.event.inputs.environment }} || true
+          if sudo docker ps -a --filter "name=my-app-${{ github.event.inputs.environment }}" --format '{{.Names}}' | grep -q "my-app-${{ github.event.inputs.environment }}"; then
+            sudo docker stop my-app-${{ github.event.inputs.environment }}
+            sudo docker rm my-app-${{ github.event.inputs.environment }}
+          else
+            echo "No existing container to stop or remove"
 
           # Run the new container with environment variables
           sudo docker run -d --name my-app-${{ github.event.inputs.environment }} -p 8080:8080 \
             -e APP_ENV=${{ github.event.inputs.environment }} \
-            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            -e JWT_PUBLIC_KEY=${{ secrets.JWT_PUBLIC_KEY }} \
+            -e NOTIFICATION_SERVICE_TOKEN=${{ secrets.NOTIFICATION_SERVICE_TOKEN }} \
+            -e JWT_PRIVATE_KEY=${{ secrets.JWT_PRIVATE_KEY }} \
+            -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+            -e POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }} \
+            -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+            -e POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} \
+            -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
             ${{ secrets.DOCKER_IMAGE }}
           EOF
