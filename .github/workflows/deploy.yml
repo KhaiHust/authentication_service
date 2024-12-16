@@ -1,47 +1,44 @@
-name: Deploy to GCE Instance
+name: Manual Deploy to Server
 
 on:
-  workflow_dispatch:  # Allows manual trigger from the GitHub Actions UI
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to (staging or production)"
+        required: true
+        default: "production"
+    branches:
+      - master
+      - feature/**
+      - release/**
 
 jobs:
   deploy:
-    permissions:
-      contents: 'read'    # Required for actions/checkout
-      id-token: 'write'   # Required for Workload Identity Federation
-
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout Code
-      - uses: 'actions/checkout@v4'
+      # Step 1: Set Up SSH
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      # Step 2: Authenticate with GCP
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-          service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+      # Step 2: Deploy Docker Image
+      - name: Deploy Docker Image
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          # Pull the latest Docker image
+          docker pull ${{ secrets.DOCKER_IMAGE }}
 
-      # Step 3: SSH into the Compute Engine Instance
-      - id: 'compute-ssh'
-        uses: 'google-github-actions/ssh-compute@v1'
-        with:
-          instance_name: 'server-instance-cp'
-          zone: 'asia-east1-a'
-          ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
-          command: |
-            # Pull Docker image
-            docker pull ${{ secrets.DOCKER_IMAGE }}
-            
-            # Stop and remove existing container
-            docker stop my-app || true
-            docker rm my-app || true
-            
-            # Run the updated container
-            docker run -d --name my-app -p 8080:8080 gcr.io/my-project/my-app:latest
+          # Stop and remove the old container (if running)
+          docker stop my-app-${{ github.event.inputs.environment }} || true
+          docker rm my-app-${{ github.event.inputs.environment }} || true
 
-      # Step 4: Output Logs
-      - id: 'log-output'
-        run: |-
-          echo 'STDOUT: ${{ steps.compute-ssh.outputs.stdout }}'
-          echo 'STDERR: ${{ steps.compute-ssh.outputs.stderr }}'
+          # Run the new container with environment variables
+          docker run -d --name my-app-${{ github.event.inputs.environment }} -p 8080:8080 \
+            -e APP_ENV=${{ github.event.inputs.environment }} \
+            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            ${{ secrets.DOCKER_IMAGE }}
+          EOF
