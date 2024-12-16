@@ -1,0 +1,27 @@
+app:
+  datasource:
+    driver: postgres
+    host: localhost
+    port: 5433
+    database: authen_service_db
+    username: user_authen_db
+    password: secret
+  redis:
+    host: localhost
+    port: 6379
+  logging:
+    development: true
+  security:
+    http:
+      jwt.publicKey: ${JWT_PUBLIC_KEY}
+  services:
+    notification-service:
+      BaseUrl: https://api.courier.com
+      Token: ${NOTIFICATION_SERVICE_TOKEN}
+      TemplateOTPForRegistration: QJS1DXW1X2MTZHJGM0E4GGZP8VS8
+    security:
+      http:
+        jwt:
+          PrivateKey: ${JWT_PRIVATE_KEY}
+          TokenExpired: 3600
+          RefreshTokenExpired: 86400

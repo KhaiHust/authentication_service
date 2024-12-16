@@ -1,0 +1,11 @@
+app:
+  datasource:
+    driver: postgres
+    host: localhost
+    port: 5433
+    database: authen_service_db
+    username: user_authen_db
+    password: secret
+    migrationSource: file://migrations
+  logging:
+    development: true

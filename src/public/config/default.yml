@@ -1,0 +1,20 @@
+app:
+  name: Authentication Internal Service
+  path: /authen-service
+  security:
+    http:
+      publicUrls:
+        - /actuator/health
+        - /actuator/info
+        - /public/v1/user
+        - /public/v1/user/send-verification-code
+        - /public/v1/user/verify-email
+        - /public/v1/user/login
+      protectedUrls:
+        - { urlPattern: "/v1/user/group/*", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/user/group/*", method: GET,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/user/group/*", method: DELETE,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/shopping/*", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/shopping/*", method: PUT,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/shopping/*", method: DELETE,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/shopping/*", method: GET,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }

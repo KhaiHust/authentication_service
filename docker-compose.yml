@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   authen-db:
-    image: postgres:13
+    image: postgres:latest
     container_name: authen_db
     environment:
         POSTGRES_USER: user_authen_db
@@ -10,7 +10,10 @@ services:
     ports:
         - "5433:5432"
     volumes:
-        - postgres:/data/postgres
-    networks:
-        - authen-network
+        - ./docker/postgres/init-database-test.sql:/docker-entrypoint-initdb.d/init-database-test.sql
 
+  authen-redis:
+    container_name: authen_redis
+    image: redis:5.0.6
+    ports:
+      - "6379:6379"
