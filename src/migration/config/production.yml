@@ -1,0 +1,11 @@
+app:
+  datasource:
+    driver: postgres
+    host: ${POSTGRES_HOST}
+    port: 5432
+    database: ${POSTGRES_DATABASE}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+    migrationSource: file://migrations
+  logging:
+    development: true

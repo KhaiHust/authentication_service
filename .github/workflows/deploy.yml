@@ -1,31 +1,44 @@
-name: Manual Deploy to Kubernetes
+name: Manual Deploy to Server
 
 on:
-  workflow_dispatch:  # Allows manual trigger via GitHub Actions UI
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to (staging or production)"
+        required: true
+        default: "production"
+    branches:
+      - master
+      - feature/**
+      - release/**
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Set up kubectl
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
-
-      # Step 2: Configure Kubernetes Cluster
-      - name: Configure Kubernetes Cluster
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        run: echo "${KUBECONFIG}" > ~/.kube/config
-
-      # Step 3: Deploy Public Service
-      - name: Deploy Public Service
+      # Step 1: Set Up SSH
+      - name: Set up SSH
         run: |
-          kubectl apply -f devops/k8s/public-deployment.yaml
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      # Step 4: Deploy Migration Service
-      - name: Deploy Migration Service
+      # Step 2: Deploy Docker Image
+      - name: Deploy Docker Image
         run: |
-          kubectl apply -f devops/k8s/migration-deployment.yaml
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          # Pull the latest Docker image
+          docker pull ${{ secrets.DOCKER_IMAGE }}
+
+          # Stop and remove the old container (if running)
+          docker stop my-app-${{ github.event.inputs.environment }} || true
+          docker rm my-app-${{ github.event.inputs.environment }} || true
+
+          # Run the new container with environment variables
+          docker run -d --name my-app-${{ github.event.inputs.environment }} -p 8080:8080 \
+            -e APP_ENV=${{ github.event.inputs.environment }} \
+            -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            ${{ secrets.DOCKER_IMAGE }}
+          EOF
