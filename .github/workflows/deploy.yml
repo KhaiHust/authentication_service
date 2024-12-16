@@ -30,14 +30,14 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
           # Pull the latest Docker image
-          docker pull ${{ secrets.DOCKER_IMAGE }}
+          sudo docker pull ${{ secrets.DOCKER_IMAGE }}
 
           # Stop and remove the old container (if running)
-          docker stop my-app-${{ github.event.inputs.environment }} || true
-          docker rm my-app-${{ github.event.inputs.environment }} || true
+          sudo docker stop my-app-${{ github.event.inputs.environment }} || true
+          sudo docker rm my-app-${{ github.event.inputs.environment }} || true
 
           # Run the new container with environment variables
-          docker run -d --name my-app-${{ github.event.inputs.environment }} -p 8080:8080 \
+          sudo docker run -d --name my-app-${{ github.event.inputs.environment }} -p 8080:8080 \
             -e APP_ENV=${{ github.event.inputs.environment }} \
             -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
             ${{ secrets.DOCKER_IMAGE }}
