@@ -38,6 +38,7 @@ jobs:
             sudo docker rm my-app-${{ github.event.inputs.environment }}
           else
             echo "No existing container to stop or remove"
+          fi
 
           # Run the new container with environment variables
           sudo docker run -d --name my-app-${{ github.event.inputs.environment }} -p 8080:8080 \
