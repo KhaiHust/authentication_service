@@ -33,7 +33,7 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_IMAGE }}
 
           # Stop and remove the old container (if running)
-          if sudo docker ps -a --filter "name=my-app-${{ github.event.inputs.environment }}" --format '{{.Names}}' | grep -q "my-app-${{ github.event.inputs.environment }}"; then
+          if sudo docker ps -a --filter "name=my-app-${{ github.event.inputs.environment }}" --format \"{{.Names}}\" | grep -q "my-app-${{ github.event.inputs.environment }}"; then
             sudo docker stop my-app-${{ github.event.inputs.environment }}
             sudo docker rm my-app-${{ github.event.inputs.environment }}
           else
