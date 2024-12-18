@@ -31,7 +31,7 @@ func (c CategoryService) GetAllCategory(ctx context.Context, spec *dto.CategoryS
 	pageSize := int64(*spec.PageSize)
 	nextPage, prePage, totalPage := helper.CalculateParameterForGetRequest(page, pageSize, total)
 
-	return response.ToListCategoryResponse(categories, page, pageSize, total, *nextPage, prePage, &totalPage), nil
+	return response.ToListCategoryResponse(categories, page, pageSize, totalPage, total, prePage, nextPage), nil
 
 }
 

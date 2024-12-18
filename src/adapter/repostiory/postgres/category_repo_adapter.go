@@ -16,9 +16,11 @@ type CategoryRepoAdapter struct {
 }
 
 func (c CategoryRepoAdapter) CountAllCategory(ctx context.Context, spec *dto.CategorySpec) (int64, error) {
-	rawQuery := specification.ToCategorySpecification(spec)
+	rawQuery := specification.ToCountCategorySpecification(spec)
 	var count int64
-	if err := c.db.WithContext(ctx).Raw("SELECT COUNT(*) FROM categories " + rawQuery).Scan(&count).Error; err != nil {
+	if err := c.db.WithContext(ctx).Raw("SELECT COUNT(*) FROM categories " + rawQuery).
+		Scan(&count).
+		Error; err != nil {
 		return 0, err
 	}
 	return count, nil

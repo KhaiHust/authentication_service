@@ -22,6 +22,7 @@ type RegisterRoutersIn struct {
 	ShoppingListController *controller.ShoppingListController
 	ShoppingTaskController *controller.ShoppingTaskController
 	CategoryController     *controller.CategoryController
+	UnitController         *controller.UnitController
 }
 
 func RegisterGinRouters(p RegisterRoutersIn) {
@@ -58,5 +59,6 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 	foodV1 := router.Group("/public/v1/food", middleware.GetInfoFromToken(p.SecurityProperties.Jwt))
 	{
 		foodV1.GET("/category", p.CategoryController.GetAllCategory)
+		foodV1.GET("/unit", p.UnitController.GetAllUnits)
 	}
 }

@@ -21,3 +21,10 @@ func ToCategorySpecification(spe *dto.CategorySpec) string {
 	}
 	return rawQuery
 }
+func ToCountCategorySpecification(spe *dto.CategorySpec) string {
+	rawQuery := "WHERE 1=1 "
+	if spe.Name != nil {
+		rawQuery += "AND name LIKE " + *spe.Name
+	}
+	return rawQuery
+}
