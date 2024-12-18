@@ -16,7 +16,16 @@ type UnitResponse struct {
 	Name string `json:"name"`
 }
 
-func ToUnitResponse(units []*entity.UnitEntity) []*UnitResponse {
+func ToUnitResponse(unit *entity.UnitEntity) *UnitResponse {
+	if unit == nil {
+		return nil
+	}
+	return &UnitResponse{
+		ID:   unit.ID,
+		Name: unit.Name,
+	}
+}
+func ToUnitsResponse(units []*entity.UnitEntity) []*UnitResponse {
 	var res []*UnitResponse
 	for _, unit := range units {
 		res = append(res, &UnitResponse{
@@ -28,7 +37,7 @@ func ToUnitResponse(units []*entity.UnitEntity) []*UnitResponse {
 }
 func ToListUnitResponse(units []*entity.UnitEntity, page, pageSize, totalPage, total int64, prePage, nextPage *int64) *ListUnitResponse {
 	return &ListUnitResponse{
-		Units:        ToUnitResponse(units),
+		Units:        ToUnitsResponse(units),
 		CurrentPage:  page,
 		PageSize:     pageSize,
 		PreviousPage: prePage,
