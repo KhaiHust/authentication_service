@@ -22,3 +22,4 @@ app:
         - { urlPattern: "/v1/food/unit", method: GET,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/food/*", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/food/*", method: PUT,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/food/*", method: DELETE,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }

@@ -78,6 +78,27 @@ func (f *FoodController) UpdatedFood(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, response.FromEntityToFoodResponse(foodEntity))
 }
+func (f *FoodController) DeleteFood(c *gin.Context) {
+	foodID, err := strconv.ParseInt(c.Param("foodId"), 10, 64)
+	if err != nil {
+		log.Error(c, "Parse food id failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "Get user id failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralForbidden)
+		return
+	}
+	err = f.foodService.DeleteFood(c, userID, foodID)
+	if err != nil {
+		log.Error(c, "Delete food failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, nil)
+}
 func NewFoodController(base *BaseController, foodService service.IFoodService) *FoodController {
 	return &FoodController{BaseController: *base, foodService: foodService}
 }

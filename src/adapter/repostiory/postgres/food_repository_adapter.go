@@ -13,6 +13,13 @@ type FoodRepositoryAdapter struct {
 	base
 }
 
+func (f FoodRepositoryAdapter) DeleteFood(ctx context.Context, tx *gorm.DB, foodID int64) error {
+	if err := tx.WithContext(ctx).Model(&model.FoodModel{}).Where("id = ?", foodID).Delete(&model.FoodModel{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (f FoodRepositoryAdapter) UpdateFood(ctx context.Context, tx *gorm.DB, foodEntity *entity.FoodEntity) (*entity.FoodEntity, error) {
 	foodModel := mapper.ToFoodModel(foodEntity)
 	if err := tx.WithContext(ctx).Model(&model.FoodModel{}).Where("id = ?", foodEntity.ID).Updates(foodModel).
