@@ -50,6 +50,34 @@ func (f *FoodController) CreateFood(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, response.FromEntityToFoodResponse(foodEntity))
 }
+func (f *FoodController) UpdatedFood(c *gin.Context) {
+	foodID, err := strconv.ParseInt(c.Param("foodId"), 10, 64)
+	if err != nil {
+		log.Error(c, "Parse food id failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	var req request.UpdateFoodRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(c, "Bind request failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "Get user id failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralForbidden)
+		return
+	}
+	reqDto := request.FromUpdateFoodRequestDto(&req)
+	foodEntity, err := f.foodService.UpdateFood(c, userID, foodID, reqDto)
+	if err != nil {
+		log.Error(c, "Update food failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.FromEntityToFoodResponse(foodEntity))
+}
 func NewFoodController(base *BaseController, foodService service.IFoodService) *FoodController {
 	return &FoodController{BaseController: *base, foodService: foodService}
 }

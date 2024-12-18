@@ -8,4 +8,6 @@ import (
 
 type IFoodPort interface {
 	SaveFood(ctx context.Context, tx *gorm.DB, foodEntity *entity.FoodEntity) (*entity.FoodEntity, error)
+	GetFoodByUserIDAndID(ctx context.Context, userID, foodID int64) (*entity.FoodEntity, error)
+	UpdateFood(ctx context.Context, tx *gorm.DB, foodEntity *entity.FoodEntity) (*entity.FoodEntity, error)
 }

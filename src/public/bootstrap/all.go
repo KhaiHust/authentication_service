@@ -86,6 +86,8 @@ func All() fx.Option {
 		fx.Provide(usecase.NewGetCategoryUsecase),
 		fx.Provide(usecase.NewGetUnitUsecase),
 		fx.Provide(usecase.NewCreateFoodUsecase),
+		fx.Provide(usecase.NewGetFoodUseCase),
+		fx.Provide(usecase.NewUpdateFoodUseCase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),
