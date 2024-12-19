@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/KhaiHust/authen_service/core/common"
+	"github.com/KhaiHust/authen_service/core/entity/dto"
 	"github.com/KhaiHust/authen_service/public/apihelper"
 	"github.com/KhaiHust/authen_service/public/middleware"
 	"github.com/KhaiHust/authen_service/public/resource/request"
@@ -98,6 +99,31 @@ func (f *FoodController) DeleteFood(c *gin.Context) {
 		return
 	}
 	apihelper.SuccessfulHandle(c, nil)
+}
+func (f *FoodController) GetAllFood(c *gin.Context) {
+	pageSize, page := middleware.GetPagingParams(c)
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "Get user id failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralForbidden)
+		return
+	}
+	params := &dto.FoodParams{}
+	params.Page = &page
+	params.PageSize = &pageSize
+	if name := c.Query("name"); name != "" {
+		params.Name = &name
+	}
+	if foodType := c.Query("type"); foodType != "" {
+		params.Type = &foodType
+	}
+	foods, err := f.foodService.GetAllFood(c, userID, params)
+	if err != nil {
+		log.Error(c, "Get all food failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, foods)
 }
 func NewFoodController(base *BaseController, foodService service.IFoodService) *FoodController {
 	return &FoodController{BaseController: *base, foodService: foodService}

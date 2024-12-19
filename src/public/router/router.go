@@ -64,5 +64,6 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		foodV1.POST("", p.FoodController.CreateFood)
 		foodV1.PUT("/:foodId", p.FoodController.UpdatedFood)
 		foodV1.DELETE("/:foodId", p.FoodController.DeleteFood)
+		foodV1.GET("", p.FoodController.GetAllFood)
 	}
 }

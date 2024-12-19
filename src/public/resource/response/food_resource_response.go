@@ -28,3 +28,32 @@ func FromEntityToFoodResponse(entity *entity.FoodEntity) *FoodResponse {
 		Unit:       ToUnitResponse(entity.Unit),
 	}
 }
+func ToListFoodResponse(entities []*entity.FoodEntity) []*FoodResponse {
+	responses := make([]*FoodResponse, 0)
+	for _, foodEntity := range entities {
+		responses = append(responses, FromEntityToFoodResponse(foodEntity))
+	}
+	return responses
+}
+
+type GetFoodResponse struct {
+	Foods        []*FoodResponse `json:"foods"`
+	TotalItems   int64           `json:"total_items"`
+	TotalPages   int64           `json:"total_pages"`
+	CurrentPage  int64           `json:"current_page"`
+	PageSize     int64           `json:"page_size"`
+	PreviousPage *int64          `json:"previous_page"`
+	NextPage     *int64          `json:"next_page"`
+}
+
+func ToGetFoodResponse(foods []*entity.FoodEntity, page, pageSize, totalPage, total int64, prePage, nextPage *int64) *GetFoodResponse {
+	return &GetFoodResponse{
+		Foods:        ToListFoodResponse(foods),
+		CurrentPage:  page,
+		PageSize:     pageSize,
+		PreviousPage: prePage,
+		TotalItems:   total,
+		TotalPages:   totalPage,
+		NextPage:     nextPage,
+	}
+}

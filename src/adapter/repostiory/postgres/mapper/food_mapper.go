@@ -44,3 +44,10 @@ func ToFoodEntity(foodModel *model.FoodModel) *entity.FoodEntity {
 	}
 	return foodEntity
 }
+func ToListFoodEntity(foodModels []*model.FoodModel) []*entity.FoodEntity {
+	foodEntities := make([]*entity.FoodEntity, 0)
+	for _, foodModel := range foodModels {
+		foodEntities = append(foodEntities, ToFoodEntity(foodModel))
+	}
+	return foodEntities
+}
