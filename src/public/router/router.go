@@ -23,6 +23,7 @@ type RegisterRoutersIn struct {
 	ShoppingTaskController *controller.ShoppingTaskController
 	CategoryController     *controller.CategoryController
 	UnitController         *controller.UnitController
+	FoodController         *controller.FoodController
 }
 
 func RegisterGinRouters(p RegisterRoutersIn) {
@@ -60,5 +61,9 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 	{
 		foodV1.GET("/category", p.CategoryController.GetAllCategory)
 		foodV1.GET("/unit", p.UnitController.GetAllUnits)
+		foodV1.POST("", p.FoodController.CreateFood)
+		foodV1.PUT("/:foodId", p.FoodController.UpdatedFood)
+		foodV1.DELETE("/:foodId", p.FoodController.DeleteFood)
+		foodV1.GET("", p.FoodController.GetAllFood)
 	}
 }

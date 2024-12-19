@@ -17,7 +17,16 @@ type CategoryResponse struct {
 	Name string `json:"name"`
 }
 
-func ToCategoryResponse(cates []*entity.CategoryEntity) []*CategoryResponse {
+func ToCategoryResponse(cate *entity.CategoryEntity) *CategoryResponse {
+	if cate == nil {
+		return nil
+	}
+	return &CategoryResponse{
+		ID:   cate.ID,
+		Name: cate.Name,
+	}
+}
+func ToCategoriesResponse(cates []*entity.CategoryEntity) []*CategoryResponse {
 	var res []*CategoryResponse
 	for _, cate := range cates {
 		res = append(res, &CategoryResponse{
@@ -29,7 +38,7 @@ func ToCategoryResponse(cates []*entity.CategoryEntity) []*CategoryResponse {
 }
 func ToListCategoryResponse(cates []*entity.CategoryEntity, page, pageSize, totalPage, total int64, prePage, nextPage *int64) *ListCategoryResponse {
 	return &ListCategoryResponse{
-		Categories:   ToCategoryResponse(cates),
+		Categories:   ToCategoriesResponse(cates),
 		CurrentPage:  page,
 		PageSize:     pageSize,
 		PreviousPage: prePage,

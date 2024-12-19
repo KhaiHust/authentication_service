@@ -14,6 +14,9 @@ func ToCategoryModel(entity *entity.CategoryEntity) *model.CategoryModel {
 	}
 }
 func ToCategoryEntity(model *model.CategoryModel) *entity.CategoryEntity {
+	if model == nil {
+		return nil
+	}
 	return &entity.CategoryEntity{
 		BaseEntity: entity.BaseEntity{
 			ID:        model.ID,
