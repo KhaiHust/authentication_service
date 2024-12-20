@@ -24,6 +24,7 @@ type RegisterRoutersIn struct {
 	CategoryController     *controller.CategoryController
 	UnitController         *controller.UnitController
 	FoodController         *controller.FoodController
+	FridgeController       *controller.FridgeController
 }
 
 func RegisterGinRouters(p RegisterRoutersIn) {
@@ -65,5 +66,9 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		foodV1.PUT("/:foodId", p.FoodController.UpdatedFood)
 		foodV1.DELETE("/:foodId", p.FoodController.DeleteFood)
 		foodV1.GET("", p.FoodController.GetAllFood)
+	}
+	fridgeV1 := router.Group("/public/v1/fridge", middleware.GetInfoFromToken(p.SecurityProperties.Jwt))
+	{
+		fridgeV1.POST("", p.FridgeController.CreateFridgeItem)
 	}
 }
