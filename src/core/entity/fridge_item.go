@@ -7,4 +7,5 @@ type FridgeItemEntity struct {
 	FoodID      int64
 	CreatedBy   int64
 	Note        string
+	Food        *FoodEntity
 }

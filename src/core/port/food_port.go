@@ -14,4 +14,5 @@ type IFoodPort interface {
 	DeleteFood(ctx context.Context, tx *gorm.DB, foodID int64) error
 	GetAllFood(ctx context.Context, foodParams *dto.FoodParams) ([]*entity.FoodEntity, error)
 	CountAllFood(ctx context.Context, foodParams *dto.FoodParams) (int64, error)
+	GetFoodByIDs(ctx context.Context, foodIDs []int64) ([]*entity.FoodEntity, error)
 }

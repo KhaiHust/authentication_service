@@ -13,6 +13,23 @@ type FridgeItemRepositoryAdapter struct {
 	base
 }
 
+func (f FridgeItemRepositoryAdapter) GetAllItems(ctx context.Context, userID int64) ([]*entity.FridgeItemEntity, error) {
+	var items []*model.FridgeItemModel
+	if err := f.db.WithContext(ctx).Model(&model.FridgeItemModel{}).Where("created_by = ?", userID).Find(&items).Error; err != nil {
+		return nil, err
+	}
+
+	return mapper.ToListFridgeItemEntity(items), nil
+}
+
+func (f FridgeItemRepositoryAdapter) DeleteItem(ctx context.Context, tx *gorm.DB, itemID int64) error {
+	if err := tx.WithContext(ctx).Model(&model.FridgeItemModel{}).Where("id = ?", itemID).Delete(&model.FridgeItemModel{}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (f FridgeItemRepositoryAdapter) UpdateItem(ctx context.Context, tx *gorm.DB, fridgeItem *entity.FridgeItemEntity) (*entity.FridgeItemEntity, error) {
 	itemModel := mapper.ToFridgeItemModel(fridgeItem)
 	if err := tx.WithContext(ctx).Model(&model.FridgeItemModel{}).Where("id = ?", fridgeItem.ID).Updates(itemModel).Error; err != nil {

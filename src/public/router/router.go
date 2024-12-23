@@ -70,5 +70,9 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 	fridgeV1 := router.Group("/public/v1/fridge", middleware.GetInfoFromToken(p.SecurityProperties.Jwt))
 	{
 		fridgeV1.POST("", p.FridgeController.CreateFridgeItem)
+		fridgeV1.PUT("/:itemId", p.FridgeController.UpdateFridgeItem)
+		fridgeV1.DELETE("/:itemId", p.FridgeController.DeleteFridgeItem)
+		fridgeV1.GET("/:itemId", p.FridgeController.DeleteFridgeItem)
+		fridgeV1.GET("", p.FridgeController.GetAllFridgeItems)
 	}
 }
