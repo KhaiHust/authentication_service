@@ -12,9 +12,19 @@ type IGetFoodUseCase interface {
 	GetFoodByUserIDAndID(ctx context.Context, userID, foodID int64) (*entity.FoodEntity, error)
 	GetAllFood(ctx context.Context, userID int64, foodParams *dto.FoodParams) ([]*entity.FoodEntity, error)
 	CountAllFood(ctx context.Context, userID int64, foodParams *dto.FoodParams) (int64, error)
+	GetFoodByIDs(ctx context.Context, foodIDs []int64) ([]*entity.FoodEntity, error)
 }
 type GetFoodUseCase struct {
 	foodPort port.IFoodPort
+}
+
+func (g GetFoodUseCase) GetFoodByIDs(ctx context.Context, foodIDs []int64) ([]*entity.FoodEntity, error) {
+	foods, err := g.foodPort.GetFoodByIDs(ctx, foodIDs)
+	if err != nil {
+		log.Error(ctx, "Get food by IDs failed: ", err)
+		return nil, err
+	}
+	return foods, nil
 }
 
 func (g GetFoodUseCase) GetAllFood(ctx context.Context, userID int64, foodParams *dto.FoodParams) ([]*entity.FoodEntity, error) {

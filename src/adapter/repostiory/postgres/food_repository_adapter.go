@@ -15,6 +15,17 @@ type FoodRepositoryAdapter struct {
 	base
 }
 
+func (f FoodRepositoryAdapter) GetFoodByIDs(ctx context.Context, foodIDs []int64) ([]*entity.FoodEntity, error) {
+	var foodModels []*model.FoodModel
+	if err := f.db.WithContext(ctx).Model(&model.FoodModel{}).
+		Preload("Category").
+		Preload("Unit").
+		Where("id IN (?)", foodIDs).Find(&foodModels).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToListFoodEntity(foodModels), nil
+}
+
 func (f FoodRepositoryAdapter) GetAllFood(ctx context.Context, foodParams *dto.FoodParams) ([]*entity.FoodEntity, error) {
 	rawQuery, args := specification.ToGetFoodSpecification(foodParams)
 	var foodModels []*model.FoodModel
