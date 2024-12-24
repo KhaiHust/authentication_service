@@ -13,6 +13,13 @@ type MealPlanFoodRepoAdapter struct {
 	base
 }
 
+func (m MealPlanFoodRepoAdapter) DeleteListMealPlanFood(ctx context.Context, tx *gorm.DB, mealPlanID int64) error {
+	if err := tx.WithContext(ctx).Where("meal_plan_id = ?", mealPlanIDs).Delete(&model.MealPlanFoodModel{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (m MealPlanFoodRepoAdapter) SaveListMealPlanFood(ctx context.Context, tx *gorm.DB, mpFEntities []*entity.MealPlanFoodEntity) ([]*entity.MealPlanFoodEntity, error) {
 	mpFModels := mapper.ToListMealPlanFoodModel(mpFEntities)
 	if err := tx.WithContext(ctx).Model(&model.MealPlanFoodModel{}).Create(mpFModels).Error; err != nil {

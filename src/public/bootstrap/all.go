@@ -96,6 +96,8 @@ func All() fx.Option {
 		fx.Provide(usecase.NewGetFridgeItemUsecase),
 		fx.Provide(usecase.NewUpdateFridgeItemUsecase),
 		fx.Provide(usecase.NewCreateMealPlanUsecase),
+		fx.Provide(usecase.NewUpdateMealPlanUsecase),
+		fx.Provide(usecase.NewGetMealPlanUsecase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),

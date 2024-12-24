@@ -9,6 +9,7 @@ import (
 	"github.com/KhaiHust/authen_service/public/service"
 	"github.com/gin-gonic/gin"
 	"github.com/golibs-starter/golib/log"
+	"strconv"
 )
 
 type MealPlanController struct {
@@ -38,6 +39,54 @@ func (m *MealPlanController) CreateNewMealPlan(c *gin.Context) {
 	mpEntity, err = m.mealPlanService.CreateNewMealPlan(c, userID, mpEntity)
 	if err != nil {
 		log.Error(c, "Create new meal plan failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.FromEntityToMealPlanResourceResponse(mpEntity))
+}
+func (m *MealPlanController) DeleteMealPlan(c *gin.Context) {
+	mealPlanID, err := strconv.ParseInt(c.Param("mealPlanId"), 10, 64)
+	if err != nil {
+		log.Error(c, "Parse meal plan ID failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "Get user ID failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	if err := m.mealPlanService.DeleteMealPlan(c, userID, mealPlanID); err != nil {
+		log.Error(c, "Delete meal plan failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, nil)
+}
+func (m *MealPlanController) UpdateMealPlan(c *gin.Context) {
+	mealPlanID, err := strconv.ParseInt(c.Param("mealPlanId"), 10, 64)
+	var req request.UpdateMealPlanRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(c, "Bind request failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	if err := m.Validator.Struct(&req); err != nil {
+		log.Error(c, "Validate request failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "Get user ID failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+
+	mpEntity, err := m.mealPlanService.UpdateMealPlan(c, userID, mealPlanID, request.FromReqToUpdateMealPlanDto(&req))
+	if err != nil {
+		log.Error(c, "Update meal plan failed: ", err)
 		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
 		return
 	}
