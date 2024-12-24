@@ -61,6 +61,8 @@ func All() fx.Option {
 		fx.Provide(postgres.NewUnitRepositoryAdapter),
 		fx.Provide(postgres.NewFoodRepositoryAdapter),
 		fx.Provide(postgres.NewFridgeItemRepositoryAdapter),
+		fx.Provide(postgres.NewMealPlanFoodRepoAdapter),
+		fx.Provide(postgres.NewMealPlanRepoAdapter),
 
 		//Provide usecase
 		fx.Provide(usecase.NewDatabaseTransactionUsecase),
@@ -93,6 +95,9 @@ func All() fx.Option {
 		fx.Provide(usecase.NewCreateFridgeItemUsecase),
 		fx.Provide(usecase.NewGetFridgeItemUsecase),
 		fx.Provide(usecase.NewUpdateFridgeItemUsecase),
+		fx.Provide(usecase.NewCreateMealPlanUsecase),
+		fx.Provide(usecase.NewUpdateMealPlanUsecase),
+		fx.Provide(usecase.NewGetMealPlanUsecase),
 
 		//Provide helper
 		fx.Provide(apihelper.TSCustomValidator),
@@ -107,6 +112,7 @@ func All() fx.Option {
 		fx.Provide(service.NewUnitService),
 		fx.Provide(service.NewFoodService),
 		fx.Provide(service.NewFridgeItemService),
+		fx.Provide(service.NewMealPlanService),
 
 		//Provide controller
 		fx.Provide(controller.NewBaseController),
@@ -119,6 +125,7 @@ func All() fx.Option {
 		fx.Provide(controller.NewUnitController),
 		fx.Provide(controller.NewFoodController),
 		fx.Provide(controller.NewFridgeController),
+		fx.Provide(controller.NewMealPlanController),
 
 		// Provide gin http server auto config,
 		// actuator endpoints and application routers
