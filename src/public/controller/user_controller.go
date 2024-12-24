@@ -136,3 +136,18 @@ func (u *UserController) Logout(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, nil)
 }
+func (u *UserController) GetProfile(c *gin.Context) {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "GetUserID error: %v", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	result, err := u.userService.GetUserProfile(c, userID)
+	if err != nil {
+		log.Error(c, "GetUserProfile error: %v", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.ToUserProfileResponse(result))
+}
