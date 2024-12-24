@@ -30,6 +30,8 @@ const (
 
 	InvalidShoppingListName = 400057
 	InvalidDueDate          = 400058
+
+	InvalidRefreshTokenCode = 401059
 )
 
 const (
@@ -44,6 +46,7 @@ const (
 	WrongPasswordMessage           = "Email / Mật khẩu không đúng!"
 	InvalidShoppingListNameMessage = "Vui lòng cung cấp tên danh sách mua sắm hợp lệ!"
 	InvalidDueDateMessage          = "Vui lòng cung cấp ngày hợp lệ!"
+	InValidRefreshTokenMessage     = "Refresh token không hợp lệ!"
 )
 
 const ()
@@ -130,6 +133,11 @@ var errorResponseMap = map[int]ErrorResponse{
 		HTTPCode:    http.StatusBadRequest,
 		ServiceCode: InvalidDueDate,
 		Message:     InvalidDueDateMessage,
+	},
+	InvalidRefreshTokenCode: {
+		HTTPCode:    http.StatusUnauthorized,
+		ServiceCode: InvalidRefreshTokenCode,
+		Message:     InValidRefreshTokenMessage,
 	},
 }
 

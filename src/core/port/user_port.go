@@ -10,4 +10,5 @@ type IUserPort interface {
 	GetUserByEmail(ctx *context.Context, email string) (*entity.UserEntity, error)
 	SaveUser(ctx *context.Context, userEntity *entity.UserEntity, tx *gorm.DB) (*entity.UserEntity, error)
 	UpdateUser(ctx *context.Context, userEntity *entity.UserEntity, tx *gorm.DB) (*entity.UserEntity, error)
+	GetUserById(ctx context.Context, id int64) (*entity.UserEntity, error)
 }

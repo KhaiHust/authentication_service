@@ -16,12 +16,49 @@ import (
 
 type ILoginUserUseCase interface {
 	LoginUser(ctx *context.Context, email string, password string) (*response.LoginResponseDto, error)
+	GetRefreshToken(ctx context.Context, refreshToken string) (*response.LoginResponseDto, error)
+	Logout(ctx context.Context, userID int64) error
 }
 type LoginUserUseCase struct {
 	jwtProps                   *properties.TokenProperties
 	refreshTokenPort           port.IRefreshTokenPort
 	getUserUsecase             IGetUserUsecase
 	databaseTransactionUsecase IDatabaseTransactionUsecase
+}
+
+func (l *LoginUserUseCase) Logout(ctx context.Context, userID int64) error {
+	err := l.refreshTokenPort.DeleteTokenByUserID(ctx, userID)
+	if err != nil {
+		log.Error(ctx, "Delete refresh token by user ID error: %v", err)
+		return err
+	}
+	log.Info(ctx, "Logout success, user ID: %d", userID)
+	return nil
+}
+
+func (l *LoginUserUseCase) GetRefreshToken(ctx context.Context, refreshToken string) (*response.LoginResponseDto, error) {
+	refreshTokenEntity, err := l.refreshTokenPort.GetRefreshTokenByToken(ctx, refreshToken)
+	if err != nil {
+		log.Error(ctx, "Get refresh token by token error: %v", err)
+		return nil, err
+	}
+	if refreshTokenEntity == nil {
+		log.Error(ctx, "Refresh token is not existed, token: %s", refreshToken)
+		return nil, errors.New(constant.ErrInvalidRefreshToken)
+	}
+	user, err := l.getUserUsecase.GetUserById(ctx, refreshTokenEntity.UserId)
+	if err != nil {
+		log.Error(ctx, "Get user by ID error: %v", err)
+		return nil, err
+	}
+	token, err := common.GenerateToken(user, l.jwtProps)
+	if err != nil {
+		log.Error(ctx, "Generate token error: %v", err)
+		return nil, err
+	}
+	var logRsp response.LoginResponseDto
+	logRsp.AccessToken = token
+	return &logRsp, nil
 }
 
 func (l *LoginUserUseCase) LoginUser(ctx *context.Context, email string, password string) (*response.LoginResponseDto, error) {
@@ -35,7 +72,15 @@ func (l *LoginUserUseCase) LoginUser(ctx *context.Context, email string, passwor
 		log.Error(ctx, "Password is invalid, email: %s", email)
 		return nil, errors.New(constant.ErrWrongPassword)
 	}
+
 	var logRsp response.LoginResponseDto
+	logRsp.IsVerified = existedUser.IsVerified
+
+	if !logRsp.IsVerified {
+		log.Info(ctx, "User is not verified, email: %s", email)
+		return &logRsp, nil
+	}
+
 	token, err := common.GenerateToken(existedUser, l.jwtProps)
 	if err != nil {
 		log.Error(ctx, "Generate token error: %v", err)

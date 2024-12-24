@@ -41,6 +41,8 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		userV1.POST("/send-verification-code", p.OtpController.SendOtpForRegistration)
 		userV1.POST("/verify-email", p.OtpController.VerifyOtpForRegistration)
 		userV1.POST("/login", p.UserController.LoginUser)
+		userV1.POST("/refresh-token", p.UserController.RefreshToken)
+		userV1.POST("/logout", middleware.GetInfoFromToken(p.SecurityProperties.Jwt), p.UserController.Logout)
 	}
 	userV1.Use(middleware.GetInfoFromToken(p.SecurityProperties.Jwt))
 	{
