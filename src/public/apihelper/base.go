@@ -65,3 +65,7 @@ func BuildResponseListRequestForApp(limit, offset, total int64, objects map[stri
 
 	return response
 }
+func GetRequestParams(c *gin.Context, key string) string {
+	mapParams := c.Request.URL.Query()
+	return mapParams.Get(key)
+}

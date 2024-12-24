@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/KhaiHust/authen_service/core/common"
+	"github.com/KhaiHust/authen_service/core/constant"
 	"github.com/KhaiHust/authen_service/public/apihelper"
 	"github.com/KhaiHust/authen_service/public/middleware"
 	"github.com/KhaiHust/authen_service/public/resource/request"
@@ -92,7 +93,48 @@ func (m *MealPlanController) UpdateMealPlan(c *gin.Context) {
 	}
 	apihelper.SuccessfulHandle(c, response.FromEntityToMealPlanResourceResponse(mpEntity))
 }
-
+func (m *MealPlanController) GetPlanByDate(c *gin.Context) {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "Get user ID failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	date, err := strconv.ParseInt(apihelper.GetRequestParams(c, constant.MealPlanDateParams), 10, 64)
+	if err != nil {
+		log.Error(c, "Parse date failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	mpEntities, err := m.mealPlanService.GetMealPlanByDate(c, userID, date)
+	if err != nil {
+		log.Error(c, "Get meal plan by date failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.FromEntitiesToMealPlanResourceResponses(mpEntities))
+}
+func (m *MealPlanController) GetDetailMealPlan(c *gin.Context) {
+	mealPlanID, err := strconv.ParseInt(c.Param("mealId"), 10, 64)
+	if err != nil {
+		log.Error(c, "Parse meal plan ID failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "Get user ID failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralUnauthorized)
+		return
+	}
+	mpEntity, err := m.mealPlanService.GetDetailMealPlan(c, userID, mealPlanID)
+	if err != nil {
+		log.Error(c, "Get detail meal plan failed: ", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.FromEntityToMealPlanResourceResponse(mpEntity))
+}
 func NewMealPlanController(BaseController *BaseController, mealPlanService service.IMealPlanService) *MealPlanController {
 	return &MealPlanController{
 		BaseController:  BaseController,

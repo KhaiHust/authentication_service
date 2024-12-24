@@ -81,5 +81,7 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		mealPlanV1.POST("", p.MealPlanController.CreateNewMealPlan)
 		mealPlanV1.PUT("/:mealId", p.MealPlanController.UpdateMealPlan)
 		mealPlanV1.DELETE("/:mealId", p.MealPlanController.DeleteMealPlan)
+		mealPlanV1.GET("", p.MealPlanController.GetPlanByDate)
+		mealPlanV1.GET("/:mealId", p.MealPlanController.GetDetailMealPlan)
 	}
 }

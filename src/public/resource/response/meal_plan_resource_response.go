@@ -25,3 +25,13 @@ func FromEntityToMealPlanResourceResponse(entity *entity.MealPlanEntity) *MealPl
 		FoodIDs:     entity.FoodIDs,
 	}
 }
+func FromEntitiesToMealPlanResourceResponses(entities []*entity.MealPlanEntity) []*MealPlanResourceResponse {
+	if entities == nil {
+		return nil
+	}
+	var responses []*MealPlanResourceResponse
+	for _, entity := range entities {
+		responses = append(responses, FromEntityToMealPlanResourceResponse(entity))
+	}
+	return responses
+}

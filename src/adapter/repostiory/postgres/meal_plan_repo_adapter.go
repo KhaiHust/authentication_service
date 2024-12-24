@@ -4,13 +4,25 @@ import (
 	"context"
 	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres/mapper"
 	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres/model"
+	"github.com/KhaiHust/authen_service/adapter/repostiory/postgres/specification"
 	"github.com/KhaiHust/authen_service/core/entity"
+	"github.com/KhaiHust/authen_service/core/entity/dto"
 	"github.com/KhaiHust/authen_service/core/port"
 	"gorm.io/gorm"
 )
 
 type MealPlanRepoAdapter struct {
 	base
+}
+
+func (m MealPlanRepoAdapter) GetMealPlan(ctx context.Context, params *dto.MealPlanParams) ([]*entity.MealPlanEntity, error) {
+	var mpModels []*model.MealPlanModel
+	rawQuery, args := specification.BuildGetMealPlanSpecification(params)
+	if err := m.db.WithContext(ctx).
+		Raw("SELECT * FROM meal_plans "+rawQuery, args).Find(mpModels).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToListMealPlanEntity(mpModels), nil
 }
 
 func (m MealPlanRepoAdapter) DeleteMealPlanByID(ctx context.Context, tx *gorm.DB, mealPlanID int64) error {

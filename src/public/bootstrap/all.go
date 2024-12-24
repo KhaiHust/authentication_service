@@ -62,7 +62,7 @@ func All() fx.Option {
 		fx.Provide(postgres.NewFoodRepositoryAdapter),
 		fx.Provide(postgres.NewFridgeItemRepositoryAdapter),
 		fx.Provide(postgres.NewMealPlanFoodRepoAdapter),
-		fx.Provide(postgres.NewMealPlanFoodRepoAdapter),
+		fx.Provide(postgres.NewMealPlanRepoAdapter),
 
 		//Provide usecase
 		fx.Provide(usecase.NewDatabaseTransactionUsecase),

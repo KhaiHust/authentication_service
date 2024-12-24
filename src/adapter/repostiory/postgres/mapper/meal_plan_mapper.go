@@ -37,3 +37,10 @@ func ToMealPlanEntity(mealPlanModel *model.MealPlanModel) *entity.MealPlanEntity
 	}
 	return mealPlanEntity
 }
+func ToListMealPlanEntity(mealPlanModels []*model.MealPlanModel) []*entity.MealPlanEntity {
+	mealPlanEntities := make([]*entity.MealPlanEntity, 0)
+	for _, mealPlanModel := range mealPlanModels {
+		mealPlanEntities = append(mealPlanEntities, ToMealPlanEntity(mealPlanModel))
+	}
+	return mealPlanEntities
+}
