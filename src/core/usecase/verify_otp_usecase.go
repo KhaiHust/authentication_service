@@ -77,6 +77,11 @@ func (v VerifyOtpUseCase) VerifyOtpRegister(ctx *context.Context, email string, 
 		log.Error(ctx, "VerifyOtpRegister: Commit error", err)
 		return err
 	}
+	err = v.cachePort.DeleteFromCache(*ctx, common.BuildCacheKeyGetUserInfoByEmail(email))
+	if err != nil {
+		log.Error(ctx, "VerifyOtpRegister: DeleteFromCache error", err)
+		return err
+	}
 	return nil
 }
 

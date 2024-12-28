@@ -12,11 +12,44 @@ import (
 
 type IGetUserUsecase interface {
 	GetUserByEmail(ctx *context.Context, email string) (*entity.UserEntity, error)
+	GetUserById(ctx context.Context, userID int64) (*entity.UserEntity, error)
 }
 
 type GetUserUsecase struct {
 	userPort  port.IUserPort
 	cachePort port.ICachePort
+}
+
+func (g *GetUserUsecase) GetUserById(ctx context.Context, userID int64) (*entity.UserEntity, error) {
+	// Get user from cache
+	key := common.BuildCacheKeyGetUserInfoByID(userID)
+	user, err := g.cachePort.GetFromCache(ctx, key)
+	if err != nil && err.Error() != constant.ErrCacheKeyNil {
+		log.Error(ctx, "GetUserById: GetFromCache error", err)
+		return nil, err
+	}
+	if user != nil {
+		rsp := &entity.UserEntity{}
+		err = json.Unmarshal([]byte(user.(string)), rsp)
+		if err != nil {
+			log.Error(ctx, "GetUserById: Unmarshal error", err)
+			return nil, err
+		}
+		return rsp, nil
+	}
+	userEntity, err := g.userPort.GetUserById(ctx, userID)
+	if err != nil {
+		log.Error(ctx, "GetUserById: GetUserById error", err)
+		return nil, err
+	}
+	// Set user to cache
+	go func() {
+		err = g.cachePort.SetToCache(ctx, key, userEntity, constant.DefaultCacheTTL)
+		if err != nil {
+			log.Error(ctx, "GetUserById: SetToCache error", err)
+		}
+	}()
+	return userEntity, nil
 }
 
 func (g *GetUserUsecase) GetUserByEmail(ctx *context.Context, email string) (*entity.UserEntity, error) {

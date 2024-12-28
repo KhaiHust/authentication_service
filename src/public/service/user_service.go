@@ -11,10 +11,26 @@ import (
 type IUserService interface {
 	CreateUser(ctx context.Context, req *request.RegisterUserRequest) (*entity.UserEntity, error)
 	LoginUser(ctx context.Context, email, password string) (*response.LoginResponseDto, error)
+	GetRefreshTokenByToken(ctx context.Context, refreshToken string) (*response.LoginResponseDto, error)
+	Logout(ctx context.Context, userID int64) error
+	GetUserProfile(ctx context.Context, userID int64) (*entity.UserProfileEntity, error)
 }
 type UserService struct {
-	createUserUsecase usecase.ICreateUserUsecase
-	loginUserUseCase  usecase.ILoginUserUseCase
+	createUserUsecase     usecase.ICreateUserUsecase
+	loginUserUseCase      usecase.ILoginUserUseCase
+	getUserProfileUseCase usecase.IGetUserProfileUseCase
+}
+
+func (u *UserService) GetUserProfile(ctx context.Context, userID int64) (*entity.UserProfileEntity, error) {
+	return u.getUserProfileUseCase.GetUserProfileByUserID(ctx, userID)
+}
+
+func (u *UserService) Logout(ctx context.Context, userID int64) error {
+	return u.loginUserUseCase.Logout(ctx, userID)
+}
+
+func (u *UserService) GetRefreshTokenByToken(ctx context.Context, refreshToken string) (*response.LoginResponseDto, error) {
+	return u.loginUserUseCase.GetRefreshToken(ctx, refreshToken)
 }
 
 func (u *UserService) LoginUser(ctx context.Context, email, password string) (*response.LoginResponseDto, error) {
@@ -26,9 +42,10 @@ func (u *UserService) CreateUser(ctx context.Context, req *request.RegisterUserR
 	return u.createUserUsecase.CreateNewUser(&ctx, userEntity)
 }
 
-func NewUserService(createUserUsecase usecase.ICreateUserUsecase, loginUserUseCase usecase.ILoginUserUseCase) IUserService {
+func NewUserService(createUserUsecase usecase.ICreateUserUsecase, loginUserUseCase usecase.ILoginUserUseCase, getUserProfileUseCase usecase.IGetUserProfileUseCase) IUserService {
 	return &UserService{
-		createUserUsecase: createUserUsecase,
-		loginUserUseCase:  loginUserUseCase,
+		createUserUsecase:     createUserUsecase,
+		loginUserUseCase:      loginUserUseCase,
+		getUserProfileUseCase: getUserProfileUseCase,
 	}
 }

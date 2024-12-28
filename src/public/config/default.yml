@@ -10,7 +10,10 @@ app:
         - /public/v1/user/send-verification-code
         - /public/v1/user/verify-email
         - /public/v1/user/login
+        - /public/v1/user/refresh-token
       protectedUrls:
+        - { urlPattern: "/v1/user/logout", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
+        - { urlPattern: "/v1/user/profile", method: GET,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/user/group/*", method: POST,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/user/group/*", method: GET,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }
         - { urlPattern: "/v1/user/group/*", method: DELETE,roles: [ "MOBILE_APP" ], unauthorizedWwwAuthenticateHeaders: [ "Bearer" ] }

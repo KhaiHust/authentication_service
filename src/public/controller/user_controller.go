@@ -4,6 +4,7 @@ import (
 	"github.com/KhaiHust/authen_service/core/common"
 	"github.com/KhaiHust/authen_service/core/constant"
 	"github.com/KhaiHust/authen_service/public/apihelper"
+	"github.com/KhaiHust/authen_service/public/middleware"
 	"github.com/KhaiHust/authen_service/public/resource/request"
 	"github.com/KhaiHust/authen_service/public/resource/response"
 	"github.com/KhaiHust/authen_service/public/service"
@@ -88,5 +89,65 @@ func (u *UserController) LoginUser(c *gin.Context) {
 		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
 		return
 	}
-	apihelper.SuccessfulHandle(c, response.ToLoginUserResponse(result.AccessToken, result.RefreshToken))
+	apihelper.SuccessfulHandle(c, response.ToLoginUserResponse(result.IsVerified, result.AccessToken, result.RefreshToken))
+}
+func (u *UserController) RefreshToken(c *gin.Context) {
+	var req request.RefreshTokenRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error(c, "Bind Json error: %v", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	if err := u.Validator.Struct(req); err != nil {
+		log.Error(c, "Validate error: %v", err)
+		errCode, err := strconv.ParseInt(err.Error(), 10, 64)
+		if err != nil {
+			log.Error(c, "Parse error: %v", err)
+			apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+			return
+		}
+		apihelper.AbortErrorHandle(c, int(errCode))
+		return
+	}
+	result, err := u.userService.GetRefreshTokenByToken(c, req.RefreshToken)
+	if err != nil {
+		log.Error(c, "GetRefreshTokenByToken error: %v", err)
+		if err.Error() == constant.ErrInvalidRefreshToken {
+			apihelper.AbortErrorHandle(c, common.InvalidRefreshTokenCode)
+			return
+		}
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.ToLoginUserResponse(result.IsVerified, result.AccessToken, result.RefreshToken))
+}
+func (u *UserController) Logout(c *gin.Context) {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "GetUserID error: %v", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	err = u.userService.Logout(c, userID)
+	if err != nil {
+		log.Error(c, "Logout error: %v", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, nil)
+}
+func (u *UserController) GetProfile(c *gin.Context) {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		log.Error(c, "GetUserID error: %v", err)
+		apihelper.AbortErrorHandle(c, common.GeneralBadRequest)
+		return
+	}
+	result, err := u.userService.GetUserProfile(c, userID)
+	if err != nil {
+		log.Error(c, "GetUserProfile error: %v", err)
+		apihelper.AbortErrorHandle(c, common.GeneralServiceUnavailable)
+		return
+	}
+	apihelper.SuccessfulHandle(c, response.ToUserProfileResponse(result))
 }

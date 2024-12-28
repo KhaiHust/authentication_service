@@ -9,4 +9,5 @@ import (
 type IUserProfilePort interface {
 	GetUserProfilesByUserIDs(ctx context.Context, userIDs []int64) ([]*entity.UserProfileEntity, error)
 	CreateNewProfile(ctx context.Context, txn *gorm.DB, userProfile *entity.UserProfileEntity) (*entity.UserProfileEntity, error)
+	GetUserProfileByUserID(ctx context.Context, userID int64) (*entity.UserProfileEntity, error)
 }
