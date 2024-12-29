@@ -15,7 +15,7 @@ type FridgeItemRepositoryAdapter struct {
 
 func (f FridgeItemRepositoryAdapter) GetAllItems(ctx context.Context, userID int64) ([]*entity.FridgeItemEntity, error) {
 	var items []*model.FridgeItemModel
-	if err := f.db.WithContext(ctx).Model(&model.FridgeItemModel{}).Where("created_by = ?", userID).Find(&items).Error; err != nil {
+	if err := f.db.WithContext(ctx).Model(&model.FridgeItemModel{}).Where("created_by = ?", userID).Order("expired_date").Find(&items).Error; err != nil {
 		return nil, err
 	}
 
