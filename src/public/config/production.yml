@@ -23,5 +23,5 @@ app:
       http:
         jwt:
           PrivateKey: ${JWT_PRIVATE_KEY}
-          TokenExpired: 3600
+          TokenExpired: 86400
           RefreshTokenExpired: 86400
