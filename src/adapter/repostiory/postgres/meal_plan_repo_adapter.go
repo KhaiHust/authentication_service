@@ -19,7 +19,7 @@ func (m MealPlanRepoAdapter) GetMealPlan(ctx context.Context, params *dto.MealPl
 	var mpModels []*model.MealPlanModel
 	rawQuery, args := specification.BuildGetMealPlanSpecification(params)
 	if err := m.db.WithContext(ctx).
-		Raw("SELECT * FROM meal_plans "+rawQuery, args).Find(mpModels).Error; err != nil {
+		Raw("SELECT * FROM meal_plans "+rawQuery, args...).Find(&mpModels).Error; err != nil {
 		return nil, err
 	}
 	return mapper.ToListMealPlanEntity(mpModels), nil

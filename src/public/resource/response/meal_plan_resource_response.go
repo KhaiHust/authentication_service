@@ -29,7 +29,7 @@ func FromEntitiesToMealPlanResourceResponses(entities []*entity.MealPlanEntity) 
 	if entities == nil {
 		return nil
 	}
-	var responses []*MealPlanResourceResponse
+	responses := make([]*MealPlanResourceResponse, 0)
 	for _, entity := range entities {
 		responses = append(responses, FromEntityToMealPlanResourceResponse(entity))
 	}

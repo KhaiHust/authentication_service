@@ -14,11 +14,11 @@ func BuildGetMealPlanSpecification(params *dto.MealPlanParams) (string, []interf
 	}
 	if params.StartedDate != nil {
 		rawQuery += "AND schedule >= ? "
-		args = append(args, time.Unix(*params.StartedDate, 0))
+		args = append(args, time.Unix(*params.StartedDate, 0).UTC())
 	}
 	if params.EndedDate != nil {
 		rawQuery += "AND schedule <= ? "
-		args = append(args, time.Unix(*params.EndedDate, 0))
+		args = append(args, time.Unix(*params.EndedDate, 0).UTC())
 	}
 	return rawQuery, args
 }
