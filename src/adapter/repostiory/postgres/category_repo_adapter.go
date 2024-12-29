@@ -31,7 +31,7 @@ func (c CategoryRepoAdapter) GetAllCategory(ctx context.Context, spec *dto.Categ
 	var models []*model.CategoryModel
 	if err := c.db.WithContext(ctx).
 		Raw("SELECT * FROM categories " + rawQuery).
-		Scan(models).
+		Scan(&models).
 		Limit(*spec.PageSize).
 		Offset(*spec.PageSize * (*spec.Page)).Error; err != nil {
 		return nil, err

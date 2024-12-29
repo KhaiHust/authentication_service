@@ -4,7 +4,7 @@ import "github.com/KhaiHust/authen_service/core/entity"
 
 type FridgeItemResponse struct {
 	ID          int64         `json:"id"`
-	Node        string        `json:"node"`
+	Note        string        `json:"note"`
 	ExpiredDate int64         `json:"expired_date"`
 	Quantity    int           `json:"quantity"`
 	FoodID      int64         `json:"food_id"`
@@ -30,12 +30,12 @@ func FromEntityToFridgeItemResponse(entity *entity.FridgeItemEntity) *FridgeItem
 		CreatedBy:   entity.CreatedBy,
 		CreatedAt:   entity.CreatedAt,
 		UpdatedAt:   entity.UpdatedAt,
-		Node:        entity.Note,
+		Note:        entity.Note,
 		Food:        food,
 	}
 }
 func FromListEntityToFridgeItemResponse(entities []*entity.FridgeItemEntity) []*FridgeItemResponse {
-	var responses []*FridgeItemResponse
+	responses := make([]*FridgeItemResponse, 0)
 	for _, entity := range entities {
 		responses = append(responses, FromEntityToFridgeItemResponse(entity))
 	}

@@ -66,6 +66,9 @@ func (g GetFridgeItemUsecase) GetItemByIDAndCreatedBy(ctx context.Context, id, c
 	return item, nil
 }
 
-func NewGetFridgeItemUsecase(fridgeItemPort port.IFridgeItemPort) IGetFridgeItemUsecase {
-	return &GetFridgeItemUsecase{fridgeItemPort: fridgeItemPort}
+func NewGetFridgeItemUsecase(fridgeItemPort port.IFridgeItemPort, getFoodUseCase IGetFoodUseCase) IGetFridgeItemUsecase {
+	return &GetFridgeItemUsecase{
+		fridgeItemPort: fridgeItemPort,
+		getFoodUseCase: getFoodUseCase,
+	}
 }

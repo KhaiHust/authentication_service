@@ -39,7 +39,7 @@ func ToFridgeItemEntity(model *model.FridgeItemModel) *entity.FridgeItemEntity {
 	}
 }
 func ToListFridgeItemEntity(models []*model.FridgeItemModel) []*entity.FridgeItemEntity {
-	var entities []*entity.FridgeItemEntity
+	entities := make([]*entity.FridgeItemEntity, 0)
 	for _, model := range models {
 		entities = append(entities, ToFridgeItemEntity(model))
 	}
