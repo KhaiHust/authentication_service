@@ -15,6 +15,14 @@ type CategoryRepoAdapter struct {
 	base
 }
 
+func (c CategoryRepoAdapter) CreateNewCategory(ctx context.Context, tx *gorm.DB, category *entity.CategoryEntity) (*entity.CategoryEntity, error) {
+	categoryModel := mapper.ToCategoryModel(category)
+	if err := tx.WithContext(ctx).Model(&model.CategoryModel{}).Create(categoryModel).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToCategoryEntity(categoryModel), nil
+}
+
 func (c CategoryRepoAdapter) CountAllCategory(ctx context.Context, spec *dto.CategorySpec) (int64, error) {
 	rawQuery := specification.ToCountCategorySpecification(spec)
 	var count int64

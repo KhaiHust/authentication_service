@@ -15,6 +15,14 @@ type UnitRepositoryAdapter struct {
 	base
 }
 
+func (u UnitRepositoryAdapter) SaveUnit(ctx context.Context, tx *gorm.DB, unit *entity.UnitEntity) (*entity.UnitEntity, error) {
+	unitModel := mapper.ToUnitModel(unit)
+	if err := tx.WithContext(ctx).Model(&model.UnitModel{}).Create(unitModel).Error; err != nil {
+		return nil, err
+	}
+	return mapper.ToUnitEntity(unitModel), nil
+}
+
 func (u UnitRepositoryAdapter) GetAllUnit(ctx context.Context, spec *dto.UnitParamDto) ([]*entity.UnitEntity, error) {
 	var unitModels []*model.UnitModel
 	if err := u.db.WithContext(ctx).

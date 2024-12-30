@@ -87,4 +87,9 @@ func RegisterGinRouters(p RegisterRoutersIn) {
 		mealPlanV1.GET("", p.MealPlanController.GetPlanByDate)
 		mealPlanV1.GET("/:mealId", p.MealPlanController.GetDetailMealPlan)
 	}
+	adminV1 := router.Group("/ops/v1/admin")
+	{
+		adminV1.POST("/unit", p.UnitController.CreateUnit)
+		adminV1.POST("/category", p.CategoryController.CreateNewCategory)
+	}
 }
