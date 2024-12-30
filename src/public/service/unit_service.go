@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/KhaiHust/authen_service/core/entity"
 	"github.com/KhaiHust/authen_service/core/entity/dto"
 	"github.com/KhaiHust/authen_service/core/helper"
 	"github.com/KhaiHust/authen_service/core/usecase"
@@ -10,9 +11,19 @@ import (
 
 type IUnitService interface {
 	GetAllUnits(ctx context.Context, params *dto.UnitParamDto) (*response.ListUnitResponse, error)
+	CreateUnit(ctx context.Context, unit *entity.UnitEntity) (*response.UnitResponse, error)
 }
 type UnitService struct {
-	getUnitUsecase usecase.IGetUnitUsecase
+	getUnitUsecase    usecase.IGetUnitUsecase
+	createUnitUseCase usecase.ICreateUnitUseCase
+}
+
+func (u UnitService) CreateUnit(ctx context.Context, unit *entity.UnitEntity) (*response.UnitResponse, error) {
+	unit, err := u.createUnitUseCase.CreateNewUnit(ctx, unit)
+	if err != nil {
+		return nil, err
+	}
+	return response.ToUnitResponse(unit), nil
 }
 
 func (u UnitService) GetAllUnits(ctx context.Context, params *dto.UnitParamDto) (*response.ListUnitResponse, error) {
@@ -31,8 +42,9 @@ func (u UnitService) GetAllUnits(ctx context.Context, params *dto.UnitParamDto) 
 	return response.ToListUnitResponse(units, page, pageSize, totalPage, total, prePage, nextPage), nil
 }
 
-func NewUnitService(getUnitUsecase usecase.IGetUnitUsecase) IUnitService {
+func NewUnitService(getUnitUsecase usecase.IGetUnitUsecase, createUnitUseCase usecase.ICreateUnitUseCase) IUnitService {
 	return &UnitService{
-		getUnitUsecase: getUnitUsecase,
+		getUnitUsecase:    getUnitUsecase,
+		createUnitUseCase: createUnitUseCase,
 	}
 }

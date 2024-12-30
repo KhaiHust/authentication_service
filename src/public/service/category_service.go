@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/KhaiHust/authen_service/core/entity"
 	"github.com/KhaiHust/authen_service/core/entity/dto"
 	"github.com/KhaiHust/authen_service/core/helper"
 	"github.com/KhaiHust/authen_service/core/usecase"
@@ -11,9 +12,20 @@ import (
 
 type ICategoryService interface {
 	GetAllCategory(ctx context.Context, spec *dto.CategorySpec) (*response.ListCategoryResponse, error)
+	CreateNewCategory(ctx context.Context, cate *entity.CategoryEntity) (*response.CategoryResponse, error)
 }
 type CategoryService struct {
-	getCategoryUsecase usecase.IGetCategoryUsecase
+	getCategoryUsecase    usecase.IGetCategoryUsecase
+	createCategoryUsecase usecase.ICreateCategoryUsecase
+}
+
+func (c CategoryService) CreateNewCategory(ctx context.Context, cate *entity.CategoryEntity) (*response.CategoryResponse, error) {
+	category, err := c.createCategoryUsecase.CreateCategory(ctx, cate)
+	if err != nil {
+		log.Error(ctx, "Create new category failed", err)
+		return nil, err
+	}
+	return response.ToCategoryResponse(category), nil
 }
 
 func (c CategoryService) GetAllCategory(ctx context.Context, spec *dto.CategorySpec) (*response.ListCategoryResponse, error) {
@@ -35,8 +47,9 @@ func (c CategoryService) GetAllCategory(ctx context.Context, spec *dto.CategoryS
 
 }
 
-func NewCategoryService(getCategoryUsecase usecase.IGetCategoryUsecase) ICategoryService {
+func NewCategoryService(getCategoryUsecase usecase.IGetCategoryUsecase, createCategoryUsecase usecase.ICreateCategoryUsecase) ICategoryService {
 	return &CategoryService{
-		getCategoryUsecase: getCategoryUsecase,
+		getCategoryUsecase:    getCategoryUsecase,
+		createCategoryUsecase: createCategoryUsecase,
 	}
 }
